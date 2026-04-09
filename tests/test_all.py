@@ -66,18 +66,23 @@ print(dijkstra_heap(weighted_list_graph, 'A'))
 print('Test Djikstra Naïf avec graphe simple')
 print(dijkstra_naif(weighted_list_graph, 'A'))
 
-print("Génération graphe creux... (V = 15 000, max 3 voisins)")
+creux_sommets = 15000
+creux_max_voisins = 3
+print(f"Génération graphe creux... (V = {creux_sommets}, max {creux_max_voisins} voisins)")
 start = time.time()
-graphe_creux = graphs.generer_graphe_creux(15000)
+graphe_creux = graphs.generer_graphe_creux(creux_sommets, creux_max_voisins)
 end = time.time()
 print(f'Génération terminée en {timedelta(seconds=end - start)}')
 
-print("Génération graphe dense... (V = 7 000, 90% connectés)")
+# Note: la génération de graphe dense a plus de 3000 sommets peut prendre un temps
+# significatif selon la machine, lancer ce test que lorsque nécessaire
+#dense_sommets = 15000
+dense_sommets = 2000
+dense_prob_connecte = 0.90
+print(f"Génération graphe dense... (V = {dense_sommets}, {int(dense_prob_connecte * 100)}% connectés)")
 start = time.time()
-# Note: la génération de graphe dense a plus de 3000 sommets prend un temps significatif,
-# lancer ce test que lorsque nécessaire
-# graphe_dense = graphs.generer_graphe_dense(7000, 0.90)
 graphe_dense = graphs.generer_graphe_dense(2000, 0.90)
+graphe_dense = graphs.generer_graphe_dense(dense_sommets, dense_prob_connecte)
 end = time.time()
 print(f'Génération terminée en {timedelta(seconds=end - start)}')
 
