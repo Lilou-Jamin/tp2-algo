@@ -1,7 +1,5 @@
-from graphs import graphs_main
-
 def main():
-    graphs_main()
+    pass
 
 if __name__ == '__main__':
     main()

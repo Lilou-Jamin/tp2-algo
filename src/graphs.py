@@ -61,15 +61,3 @@ class ListGraph(BaseGraph):
         for vertex, neighbors in self.adjacency_list.items():
             neighbors_str = ", ".join(str(n) for n in neighbors)
             print(f"{vertex} -> [ {neighbors_str} ]")
-
-def graphs_main():
-    print('Matrix Graph')
-    MatrixGraph(['A', 'B', 'C'], [[1, 2, 3], [4, 5, 6], [7, 8, 9]]).print()
-
-    print('List Graph')
-    graph_data = {
-        'A': ['B', 'C'],
-        'B': ['A'],
-        'C': ['A', 'B']
-    }
-    ListGraph(graph_data).print()
