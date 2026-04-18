@@ -1,6 +1,9 @@
 from collections import deque
 from abc import ABC, abstractmethod
 from math import inf
+import random
+import time
+import heapq
 
 """ Exercice 1 : Parcours de graphes """
 
@@ -65,6 +68,46 @@ class ListGraph(BaseGraph):
         for vertex, neighbors in self.adjacency_list.items():
             neighbors_str = ", ".join(str(n) for n in neighbors)
             print(f"{vertex} -> [ {neighbors_str} ]")
+
+
+
+class WeightedListGraph(BaseGraph):
+    def __init__(self, adjacency_list):
+        self.adjacency_list = adjacency_list
+        self.__validate_list__()
+
+    def __validate_list__(self):
+        if not isinstance(self.adjacency_list, dict):
+            raise Exception("L'entrée doit être un dictionnaire (dict)")
+
+        if len(self.adjacency_list) < 2:
+            raise Exception("Le graphe doit avoir au moins 2 sommets")
+
+        vertices = set(self.adjacency_list.keys())
+        for vertex, edges in self.adjacency_list.items():
+            if not isinstance(edges, list):
+                raise Exception(f"Les arêtes du sommet '{vertex}' doivent être une liste")
+
+            for edge in edges:
+                if not isinstance(edge, tuple) or len(edge) != 2:
+                    raise Exception(f"L'arête {edge} du sommet '{vertex}' est invalide. Attendu : (voisin, poids)")
+
+                neighbor, weight = edge
+                if neighbor not in vertices:
+                    raise Exception(f"Le voisin '{neighbor}' du sommet '{vertex}' n'est pas défini comme sommet")
+
+                if not isinstance(weight, (int, float)):
+                    raise Exception(f"Le poids de l'arête vers '{neighbor}' doit être un nombre")
+
+    def print(self):
+        """Affiche le graphe pondéré de liste d'adjancence de façon lisible humainement"""
+        for vertex, edges in self.adjacency_list.items():
+            edges_str = ", ".join(f"{neighbor}: {weight}" for neighbor, weight in edges)
+
+            if not edges_str:
+                edges_str = "Aucun voisin"
+
+            print(f"{vertex} -> [ {edges_str} ]")
 
 def dfs_recursif(graphe, depart, visites=None, ordre=None):
     """   
@@ -342,3 +385,91 @@ def reconstruct_path(predecessors, source, target):
     if not path or path[0] != source:
         return None
     return path
+
+
+import heapq
+def dijkstra_heap(weighted_graph: WeightedListGraph, start):
+    graph = weighted_graph.adjacency_list
+
+    distance = {n: float('inf') for n in graph}
+    distance[start] = 0
+    priority_queue = [(0, start)]
+    while priority_queue:
+        distance_actuelle, sommet_actuel = heapq.heappop(priority_queue)
+        # On ignore les anciennes versions d’un sommet dans le tas
+        if distance_actuelle > distance[sommet_actuel]:
+            continue
+
+        for voisin, poids in graph[sommet_actuel]:
+            if distance_actuelle + poids < distance[voisin]:
+                distance[voisin] = distance_actuelle + poids
+                heapq.heappush(priority_queue, (distance[voisin], voisin))
+
+    return distance
+
+def dijkstra_naif(weighted_graph: WeightedListGraph, start):
+    graph = weighted_graph.adjacency_list
+
+    distance = {n: float('inf') for n in graph}
+    distance[start] = 0
+
+    non_visites = set(graph.keys())
+
+    while non_visites:
+        noeud_actuel = None
+        min_dist = float('inf')
+
+        for noeud in non_visites:
+            if distance[noeud] < min_dist:
+                min_dist = distance[noeud]
+                noeud_actuel = noeud
+
+        if noeud_actuel is None:
+            break
+
+        non_visites.remove(noeud_actuel)
+        for voisin, poids in graph[noeud_actuel]:
+            if voisin in non_visites:
+                nouvelle_distance = distance[noeud_actuel] + poids
+
+                if nouvelle_distance < distance[voisin]:
+                    distance[voisin] = nouvelle_distance
+
+    return distance
+
+def generer_graphe_creux(n_sommets, max_voisins=3):
+    """Génère un graphe où chaque sommet n'a que très peu de connexions (sparse)."""
+    graph = {i: [] for i in range(n_sommets)}
+
+    # 1. On crée un chemin de base pour s'assurer que tout est connecté
+    for i in range(n_sommets - 1):
+        poids = random.randint(1, 10)
+        graph[i].append((i + 1, poids))
+        graph[i + 1].append((i, poids))
+
+    # 2. On ajoute quelques arêtes aléatoires jusqu'à la limite max_voisins
+    for i in range(n_sommets):
+        while len(graph[i]) < max_voisins:
+            voisin = random.randint(0, n_sommets - 1)
+            # On évite de se connecter à soi-même ou de créer des doublons
+            if voisin != i and not any(v == voisin for v, _ in graph[i]):
+                poids = random.randint(1, 10)
+                graph[i].append((voisin, poids))
+                graph[voisin].append((i, poids))
+
+    return WeightedListGraph(graph)
+
+def generer_graphe_dense(n_sommets, probabilite=0.9):
+    """Génère un graphe où presque tous les sommets sont connectés (dense)."""
+    graph = {i: [] for i in range(n_sommets)}
+
+    # On teste chaque paire possible
+    for i in range(n_sommets):
+        for j in range(i + 1, n_sommets):
+            # probabilite=0.9 signifie 90% de chances de créer une arête
+            if random.random() < probabilite:
+                poids = random.randint(1, 10)
+                graph[i].append((j, poids))
+                graph[j].append((i, poids))
+
+    return WeightedListGraph(graph)
