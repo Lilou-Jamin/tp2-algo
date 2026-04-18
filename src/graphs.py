@@ -387,7 +387,6 @@ def reconstruct_path(predecessors, source, target):
     return path
 
 
-import heapq
 def dijkstra_heap(weighted_graph: WeightedListGraph, start):
     graph = weighted_graph.adjacency_list
 
