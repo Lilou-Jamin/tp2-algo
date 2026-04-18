@@ -472,3 +472,207 @@ def generer_graphe_dense(n_sommets, probabilite=0.9):
                 graph[j].append((i, poids))
 
     return WeightedListGraph(graph)
+
+
+
+""" Exercice 3 : Flot maximum """
+
+def dfs_chemin_residuel(graphe_residuel, source, puits, visites=None, chemin=None):
+    """
+    recherche récursive d un chemin augmentant dans le graphe résiduel.
+    graphe_residuel -> dict[sommet, dict[voisin, capacité_residuelle]]
+    source -> sommet de départ
+    puits -> sommet d'arrivée
+    visites -> ensemble des sommets déjà visités
+    chemin -> liste des arêtes du chemin [(u, v), ...]
+    
+    renvoie une liste d'arêtes représentant un chemin de source à puits ou none si aucun chemin n'existe
+    """
+    if visites is None:
+        visites = set()
+    if chemin is None:
+        chemin = []
+
+    if source == puits:
+        return chemin
+
+    visites.add(source)
+    for voisin, capacite in graphe_residuel.get(source, {}).items():
+        if voisin not in visites and capacite > 0:
+            resultat = dfs_chemin_residuel(
+                graphe_residuel,
+                voisin,
+                puits,
+                visites,
+                chemin + [(source, voisin)]
+            )
+            if resultat is not None:
+                return resultat
+    return None
+
+def ford_fulkerson(capacites, source, puits):
+    """
+    algorithme de Ford-Fulkerson avec recherche DFS des chemins augmentants
+    capacites -> dict[sommet, dict[voisin, capacité]]
+    source -> sommet source
+    puits -> sommet puits
+    renvoie la valeur du flot maximal (max_flow) et dict[sommet, dict[voisin, flot_envoyé]] (flot)
+    """
+    # on construit l'ensemble des sommets
+    sommets = set(capacites.keys())
+    for u in capacites:
+        for v in capacites[u]:
+            sommets.add(v)
+
+    # création du graphe résiduel
+    graphe_residuel = {u: {} for u in sommets}
+    for u in sommets:
+        for v in sommets:
+            graphe_residuel[u][v] = 0
+
+    for u in capacites:
+        for v, cap in capacites[u].items():
+            graphe_residuel[u][v] = cap
+            # l'arête inverse existe aussi dans le résiduel, initialement à 0
+            if u not in graphe_residuel[v]:
+                graphe_residuel[v][u] = 0
+
+    # création du flot
+    flot = {u: {} for u in sommets}
+    for u in sommets:
+        for v in sommets:
+            flot[u][v] = 0
+    max_flow = 0
+
+    while True:
+        # on cherche un chemin augmentant avec DFS
+        chemin = dfs_chemin_residuel(graphe_residuel, source, puits)
+
+        if chemin is None:
+            break
+
+        # capacité minimale sur le chemin trouvé
+        flot_chemin = min(graphe_residuel[u][v] for u, v in chemin)
+
+        # màj du graphe résiduel et du flot
+        for u, v in chemin:
+            graphe_residuel[u][v] -= flot_chemin
+            graphe_residuel[v][u] += flot_chemin
+
+            # si (u,v) est une arête originale alors on augmente le flot
+            if u in capacites and v in capacites[u]:
+                flot[u][v] += flot_chemin
+            else:
+                # sinon c'est une arête retour alors on annule une partie du flot
+                flot[v][u] -= flot_chemin
+        max_flow += flot_chemin
+
+    # ne garder que les arêtes du graphe initial
+    flot_final = {}
+    for u in capacites:
+        flot_final[u] = {}
+        for v in capacites[u]:
+            flot_final[u][v] = flot[u][v]
+    return max_flow, flot_final
+
+
+def bfs_chemin_residuel(graphe_residuel, source, puits):
+    """
+    recherche un chemin augmentant dans le graphe résiduel avec BFS
+    graphe_residuel -> dict[sommet, dict[voisin, capacité_residuelle]]
+    source -> sommet source
+    puits -> sommet puits
+    renvoie une liste d'arêtes [(u, v), ...] représentant le chemin ou none s'il n'existe aucun chemin augmentant
+    """
+    visites = set([source])
+    parent = {source: None}
+    file = deque([source])
+
+    while file:
+        sommet = file.popleft()
+        if sommet == puits:
+            break
+        for voisin, capacite in graphe_residuel.get(sommet, {}).items():
+            if voisin not in visites and capacite > 0:
+                visites.add(voisin)
+                parent[voisin] = sommet
+                file.append(voisin)
+
+    if puits not in parent:
+        return None
+
+    # on reconstruit du chemin depuis le puits jusqu'à la source
+    chemin = []
+    courant = puits
+
+    while parent[courant] is not None:
+        precedent = parent[courant]
+        chemin.append((precedent, courant))
+        courant = precedent
+    chemin.reverse()
+    return chemin
+
+
+def edmonds_karp(capacites, source, puits):
+    """
+    algorithme d'Edmonds-Karp (ford-Fulkerson + BFS)
+    capacites -> dict[sommet, dict[voisin, capacité]]
+    renvoie la valeur du flot maximal (max_flow) et dict[sommet, dict[voisin, flot]] (flot_final)
+        max_flow, flot_final
+    """
+    # on construit l'ensemble des sommets
+    sommets = set(capacites.keys())
+    for u in capacites:
+        for v in capacites[u]:
+            sommets.add(v)
+
+    # création du graphe résiduel
+    graphe_residuel = {u: {} for u in sommets}
+    for u in sommets:
+        for v in sommets:
+            graphe_residuel[u][v] = 0
+
+    for u in capacites:
+        for v, cap in capacites[u].items():
+            graphe_residuel[u][v] = cap
+            if u not in graphe_residuel[v]:
+                graphe_residuel[v][u] = 0
+
+    # création du flot
+    flot = {u: {} for u in sommets}
+    for u in sommets:
+        for v in sommets:
+            flot[u][v] = 0
+    max_flow = 0
+
+    while True:
+        # on cherche d'un plus court chemin augmentant avec BFS
+        chemin = bfs_chemin_residuel(graphe_residuel, source, puits)
+
+        if chemin is None:
+            break
+
+        # goulot d'étranglement du chemin
+        flot_chemin = min(graphe_residuel[u][v] for u, v in chemin)
+
+        # màj du résiduel et du flot
+        for u, v in chemin:
+            graphe_residuel[u][v] -= flot_chemin
+            graphe_residuel[v][u] += flot_chemin
+
+            # arête de base
+            if u in capacites and v in capacites[u]:
+                flot[u][v] += flot_chemin
+            else:
+                # arête retour
+                flot[v][u] -= flot_chemin
+
+        max_flow += flot_chemin
+
+    # on garde que les arêtes du graphe initial
+    flot_final = {}
+    for u in capacites:
+        flot_final[u] = {}
+        for v in capacites[u]:
+            flot_final[u][v] = flot[u][v]
+    return max_flow, flot_final

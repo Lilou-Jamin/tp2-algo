@@ -160,3 +160,30 @@ print("\nPour un graphe en matrice :")
 print("Distances :", distances2)
 print("Prédécesseurs :", predecessors2)
 print("Chemin A -> E :", graphs.reconstruct_path(predecessors2, 'A', 'E'))
+
+input("\nAppuyez sur Entrée pour continuer vers l'exo 3")
+
+print("\n---- Exercice 3 ----")  
+
+capacites = {
+    's': {'a': 10, 'b': 5},
+    'a': {'b': 15, 't': 10},
+    'b': {'t': 10},
+    't': {}
+}
+
+print("\nTest de l'algo de Ford-Fulkerson :")
+max_flow, flot = graphs.ford_fulkerson(capacites, 's', 't')
+print("Flot maximal =", max_flow)
+print("Répartition du flot :")
+for u in flot:
+    for v in flot[u]:
+        print(f"{u} -> {v} : {flot[u][v]}")
+
+print("\nTest de l'algo de Edmonds-Karp :")
+max_flow, flot = graphs.edmonds_karp(capacites, 's', 't')
+print("Flot maximal :", max_flow)
+print("Flots sur les arêtes :")
+for u in flot:
+    for v in flot[u]:
+        print(f"{u} -> {v} : {flot[u][v]}")

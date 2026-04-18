@@ -1,4 +1,4 @@
-# Comparaison DFS vs BFS
+# Comparaison DFS / BFS
 
 Niveau complexité temporelle : DFS et BFS ont la même complexité temporelle quand ils sont représentés par des listes d’adjacence : O(V + E).
 En espace, les deux sont en O(V).
@@ -7,8 +7,34 @@ La différence principale est leur stratégie :
 - BFS explore par niveaux, ce qui le rend plus adapté au calcul du plus court chemin dans un graphe pondéré
 
 
-# Comparaison Bellman-Ford vs Djikstra
-
-Bellman-Ford calcule les plus courts chemins depuis un sommet source dans un graphe pondéré. Sa complexité est O(V × E) car il relâche toutes les arêtes |V| - 1 fois.
+# Comparaison Bellman-Ford / Djikstra
+Bellman-Ford calcule les plus courts chemins depuis un sommet source dans un graphe pondéré. 
+Sa complexité est O(V × E) car il relâche toutes les arêtes |V| - 1 fois
 Son principal avantage est qu’il accepte les arêtes de poids négatif, contrairement à Dijkstra. Il permet aussi de détecter la présence de cycles négatifs.
 On l’utilise donc pour les graphes pondérés contenant potentiellement des poids négatifs ou lorsqu’on veut vérifier qu’aucun cycle négatif n’existe.
+
+
+# Comparaison Ford-Fulkerson / Edmonds-Karp
+
+Niveau itérations : 
+on considère qu'une itération = la recherche d’un chemin augmentant + la mise à jour du flot
+Ford-Fulkerson (DFS): le nombre d’itérations dépend beaucoup des chemins choisis. Il peut être proche de max_flow si on augmente le flot petit à petit
+Edmonds-Karp (BFS) : choisit toujours un plus court chemin augmentant. Il évite les “mauvais choix” donc comportement plus stable
+
+Niveau temps d'exécution : 
+Le temps dépend de la taille du graphe (V, E), le nb d’itérations et le coût de chaque recherche de chemin
+Coût d’une recherche pour chaque algos :
+Ford-Fulkerson (DFS) : O(E)
+Edmonds-Karp (BFS) : O(E)
+Même temps d'exécution donc la vraie différence de temps vient surtout du nombre total d’itérations
+
+Niveau flot max : 
+Les deux algorithmes trouvent le même flot final, c'est la méthode pour y arriver qui diffère.
+
+
+# Comparaison graphes petit flot / grand flot 
+Graphe à petit flot : peu de chemins augmentants + capacités faibles + flot maximal petit
+Adapté pour Ford-Fulkerson 
+
+Graphe à grand flot : capacités élevées + flot maximal important
+Adapté pour Edmonds-Karp
