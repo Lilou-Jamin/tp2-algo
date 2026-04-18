@@ -2,7 +2,6 @@ import src.graphs as graphs
 import src.np_hard as np_hard
 import src.probabilistic as probabilistic
 import src.trees as trees
-from graphs import MatrixGraph, ListGraph
 
 graph_data = {
     'A': ['B', 'C'],
@@ -34,26 +33,60 @@ graphe_tri_tipologique = {
     "F": []
 }
 
+graphe_plus_court_chemin = {
+    "A": ["B", "C"],
+    "B": ["D"],
+    "C": ["D", "E"],
+    "D": ["F"],
+    "E": ["F"],
+    "F": []
+}
+
 print("---- Exercice 1 ----")  
-print('Matrix Graph')
-MatrixGraph(['A', 'B', 'C'], [[1, 2, 3], [4, 5, 6], [7, 8, 9]]).print()
-print('List Graph')
-ListGraph(graph_data).print()
+print('\n graphe sous forme de matrice :')
+graphs.MatrixGraph(['A', 'B', 'C'], [[1, 2, 3], [4, 5, 6], [7, 8, 9]]).print()
+print('\ngraphe sous forme de liste d\'adjacence :')
+graphs.ListGraph(graph_data).print()
 print("Test parcours dfs récursif :", graphs.dfs_recursif(graphe, "A"))
 print("Test parcours dfs itératif :", graphs.dfs_iteratif(graphe, "A"))
 print("Test si un graphe est cyclique :", graphs.contient_cycle_oriente(graphe_cycle))
 print("Test si un graphe non orienté est cyclique :", graphs.contient_cycle_non_oriente(graphe_cycle))
 print("Test tri tipologique :", graphs.tri_topologique_dfs(graphe_tri_tipologique))
-input("Appuyez sur Entrée pour continuer...")
-from graphs import MatrixGraph, ListGraph
+print("Test du plus court chemin dans un graphe non pondéré :", graphs.plus_court_chemin_bfs(graphe_plus_court_chemin, "A", "F"))
 
-print('Matrix Graph')
-MatrixGraph(['A', 'B', 'C'], [[1, 2, 3], [4, 5, 6], [7, 8, 9]]).print()
+input("\nAppuyez sur Entrée pour continuer...")
 
-print('List Graph')
-graph_data = {
-    'A': ['B', 'C'],
-    'B': ['A'],
-    'C': ['A', 'B']
-}
-ListGraph(graph_data).print()
+print("\n---- Exercice 2 ----")  
+
+graph_liste = graphs.ListGraph({
+    'A': [('B', 4), ('C', 2)],
+    'B': [('C', 3), ('D', 2), ('E', 3)],
+    'C': [('B', 1), ('D', 4), ('E', 5)],
+    'D': [('E', -5)],
+    'E': []
+})
+distances, predecessors = graphs.bellman_ford(graph_liste, 'A')
+
+graph_matrice = graphs.MatrixGraph(
+    vertices = ['A', 'B', 'C', 'D', 'E'],
+    matrix = [
+        [0,    4,    2,    None, None],
+        [None, 0,    3,    2,    3],
+        [None, 1,    0,    4,    5],
+        [None, None, None, 0,   -5],
+        [None, None, None, None, 0]
+    ]
+)
+distances2, predecessors2 = graphs.bellman_ford(graph_matrice, 'A')
+
+print("Test de l'algo de Bellman-Ford :")
+print("\nPour un graphe en liste d'adjacence :")
+print("Distances :", distances)
+print("Prédécesseurs :", predecessors)
+print("Chemin A -> E :", graphs.reconstruct_path(predecessors, 'A', 'E'))
+
+print("\nPour un graphe en matrice :")
+print("Distances :", distances2)
+print("Prédécesseurs :", predecessors2)
+print("Chemin A -> E :", graphs.reconstruct_path(predecessors2, 'A', 'E'))
+

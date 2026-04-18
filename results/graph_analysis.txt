@@ -1,0 +1,14 @@
+# Comparaison DFS vs BFS
+
+Niveau complexité temporelle : DFS et BFS ont la même complexité temporelle quand ils sont représentés par des listes d’adjacence : O(V + E).
+En espace, les deux sont en O(V).
+La différence principale est leur stratégie :
+- DFS explore profondément avant de revenir en arrière, donc plus adapté à la détection de cycles et au tri topologique.
+- BFS explore par niveaux, ce qui le rend plus adapté au calcul du plus court chemin dans un graphe pondéré
+
+
+# Comparaison Bellman-Ford vs Djikstra
+
+Bellman-Ford calcule les plus courts chemins depuis un sommet source dans un graphe pondéré. Sa complexité est O(V × E) car il relâche toutes les arêtes |V| - 1 fois.
+Son principal avantage est qu’il accepte les arêtes de poids négatif, contrairement à Dijkstra. Il permet aussi de détecter la présence de cycles négatifs.
+On l’utilise donc pour les graphes pondérés contenant potentiellement des poids négatifs ou lorsqu’on veut vérifier qu’aucun cycle négatif n’existe.

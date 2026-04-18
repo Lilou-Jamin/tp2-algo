@@ -1,5 +1,6 @@
 from collections import deque
 from abc import ABC, abstractmethod
+from math import inf
 
 """ Exercice 1 : Parcours de graphes """
 
@@ -16,26 +17,26 @@ class MatrixGraph(BaseGraph):
 
     def __validate_matrix__(self):
         if not isinstance(self.vertices, list):
-            raise Exception("Vertices must be a list")
+            raise Exception("Les sommets doivent être une liste")
         vertices_len = len(self.vertices)
         if vertices_len < 2:
-            raise Exception("Vertices must have at least 2 elements")
+            raise Exception("Les sommets doivent contenir au moins 2 éléments")
 
         if not isinstance(self.matrix, list):
-            raise Exception("Matrix must be a list")
+            raise Exception("La matrice doit être une liste")
         matrix_len = len(self.matrix)
         if matrix_len < 2:
-            raise Exception("Matrix must have at least 2 vertices")
+            raise Exception("La matrice doit avoir au moins 2 lignes")
 
         if vertices_len != matrix_len:
-            raise Exception("Matrix vertices must have the same number of vertices")
+            raise Exception("Les sommets de la matrice doivent correspondre à la liste de sommets")
 
         for i in range(matrix_len):
             if len(self.matrix[i]) != matrix_len:
-                raise Exception(f"Matrix index {i} has an invalid length")
+                raise Exception(f"L'index de la matrice {i} n'a pas une longueur valide")
 
     def print(self):
-        """Display the Matrix Graph in a human-readable way"""
+        """affiche le graphe sous forme de matrice d'adjacence de manière lisible"""
         print("\\ | " + " ".join(self.vertices))
         print("--" * (len(self.vertices) + 1) + '-')
         for index, row in enumerate(self.matrix):
@@ -49,21 +50,22 @@ class ListGraph(BaseGraph):
 
     def __validate_list__(self):
         if not isinstance(self.adjacency_list, dict):
-            raise Exception("Adjacency list must be a dict")
+            raise Exception("La liste d'adjacence doit être un dictionnaire")
 
         if len(self.adjacency_list) < 2:
-            raise Exception("Adjacency list must have at least 2 vertices")
+            raise Exception("La liste d'adjacence doit contenir au moins 2 sommets")
 
         vertices = set(self.adjacency_list.keys())
         for vertex, neighbors in self.adjacency_list.items():
             if not isinstance(neighbors, list):
-                raise Exception(f"Neighbors of vertex '{vertex}' must be supplied as a list")
+                raise Exception(f"Voisins du sommet '{vertex}' doit être une liste")
 
     def print(self):
-        """Display the List Graph in a human-readable way."""
+        """affiche dans un format lisible le graphe sous forme de liste d'adjacence"""
         for vertex, neighbors in self.adjacency_list.items():
             neighbors_str = ", ".join(str(n) for n in neighbors)
             print(f"{vertex} -> [ {neighbors_str} ]")
+
 def dfs_recursif(graphe, depart, visites=None, ordre=None):
     """   
     parcours dfs récursif à partir d'un sommet donné  
@@ -189,12 +191,9 @@ def tri_topologique_dfs(graphe):
 def bfs(graphe, depart):
     """
     parcours bfs itératif avec une file    
-    Args:
-        graphe: dict[sommet, list[sommet]]
-        depart: sommet de départ
-    
-    Returns:
-        list: ordre de visite
+    graphe -> dict[sommet, list[sommet]]
+    depart -> sommet de départ
+    retourne une liste avec l'ordre de visite
     """
     visites = set([depart])
     ordre = []
@@ -210,3 +209,136 @@ def bfs(graphe, depart):
                 file.append(voisin)
 
     return ordre
+
+def plus_court_chemin_bfs(graphe, depart, arrivee):
+    """
+    retourne une liste avec le plus court chemin entre depart et arrivee dans un graphe non pondéré
+    """
+    if depart == arrivee:
+        return [depart]
+
+    file = deque([depart])
+    visites = set([depart])
+    parent = {depart: None}
+
+    while file:
+        sommet = file.popleft()
+
+        for voisin in graphe.get(sommet, []):
+            if voisin not in visites:
+                visites.add(voisin)
+                parent[voisin] = sommet
+                file.append(voisin)
+
+                if voisin == arrivee:
+                    chemin = []
+                    courant = arrivee
+                    while courant is not None:
+                        chemin.append(courant)
+                        courant = parent[courant]
+                    return chemin[::-1]
+    return None
+
+""" Exercice 2 : Plus court chemin """
+
+def get_vertices(graph):
+    """
+    retourne liste des sommets selon le type de graphe
+    """
+    if isinstance(graph, MatrixGraph):
+        return graph.vertices
+    elif isinstance(graph, ListGraph):
+        return list(graph.adjacency_list.keys())
+    else:
+        raise TypeError("Type de graphe non supporté")
+
+
+def get_weighted_edges(graph):
+    """
+    récupère toutes les aretes pondérées du graphe sous la forme : [(source, destination, poids), ...]
+    """
+    edges = []
+
+    if isinstance(graph, MatrixGraph):
+        vertices = graph.vertices
+        matrix = graph.matrix
+        n = len(vertices)
+
+        for i in range(n):
+            for j in range(n):
+                weight = matrix[i][j]
+
+                # pas d'arête si None ou inf
+                if weight is None or weight == inf:
+                    continue
+                edges.append((vertices[i], vertices[j], weight))
+
+    elif isinstance(graph, ListGraph):
+        for source, neighbors in graph.adjacency_list.items():
+            for edge in neighbors:
+                if not isinstance(edge, tuple) or len(edge) != 2:
+                    raise ValueError(
+                        f"Format invalide pour l'arête depuis '{source}'. "
+                        f"Attendu : (voisin, poids)"
+                    )
+                destination, weight = edge
+                edges.append((source, destination, weight))
+    else:
+        raise TypeError("Type de graphe non supporté")
+    return edges
+
+
+def bellman_ford(graph, source):
+    """
+    algo de Bellman-Ford, on part d'un sommet source et on cherche le plus court chemin
+    retourne un dict de distances avec {sommet: distance minimale depuis source}
+    + un autre dict de prédecesseurs avec {sommet: prédécesseur}
+
+    si y'a un cycle négatif alors erreur
+    """
+    vertices = get_vertices(graph)
+    edges = get_weighted_edges(graph)
+
+    if source not in vertices:
+        raise ValueError(f"Le sommet source '{source}' n'existe pas dans le graphe")
+
+    distances = {v: inf for v in vertices}
+    predecessors = {v: None for v in vertices}
+    distances[source] = 0
+
+    # relaxation des arêtes |V| - 1 fois
+    for _ in range(len(vertices) - 1):
+        updated = False
+
+        for u, v, w in edges:
+            if distances[u] != inf and distances[u] + w < distances[v]:
+                distances[v] = distances[u] + w
+                predecessors[v] = u
+                updated = True
+
+        if not updated:
+            break
+
+    # on check si y'a un cycle négatif
+    for u, v, w in edges:
+        if distances[u] != inf and distances[u] + w < distances[v]:
+            raise ValueError("Cycle négatif détecté dans le graphe")
+
+    return distances, predecessors
+
+
+def reconstruct_path(predecessors, source, target):
+    """
+    reconstruit le chemin source -> target a partir des prédécesseurs
+    retourne une liste de sommets du chemin ou none si inaccesible
+    """
+    path = []
+    current = target
+
+    while current is not None:
+        path.append(current)
+        current = predecessors[current]
+    path.reverse()
+    if not path or path[0] != source:
+        return None
+    return path
