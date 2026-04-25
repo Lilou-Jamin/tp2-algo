@@ -69,10 +69,74 @@ print("Test parcours dfs itératif :", graphs.dfs_iteratif(graphe, "A"))
 print("Test si un graphe est cyclique :", graphs.contient_cycle_oriente(graphe_cycle))
 print("Test si un graphe non orienté est cyclique :", graphs.contient_cycle_non_oriente(graphe_cycle))
 print("Test tri tipologique :", graphs.tri_topologique_dfs(graphe_tri_tipologique))
+print("Test du plus court chemin dans un graphe non pondéré :", graphs.plus_court_chemin_bfs(graphe_plus_court_chemin, "A", "F"))
 
 input("\nAppuyez sur Entrée pour continuer vers l'exo 2")
 
-print("\n---- Exercice 2 ----")  
+print("\n---- Exercice 2 ----")
+
+print("\n2.1 : ")
+
+print('\nTest Djikstra Heap avec graphe simple')
+start = time.time()
+print(graphs.dijkstra_heap(weighted_list_graph, 'A'))
+end = time.time()
+print(f'Test terminé en {timedelta(seconds=end - start)}')
+
+print('\nTest Djikstra Naïf avec graphe simple')
+start = time.time()
+print(graphs.dijkstra_naif(weighted_list_graph, 'A'))
+end = time.time()
+print(f'Test terminé en {timedelta(seconds=end - start)}')
+
+creux_sommets = 15000
+creux_max_voisins = 3
+print(f"Génération graphe creux... (V = {creux_sommets}, max {creux_max_voisins} voisins)")
+start = time.time()
+graphe_creux = graphs.generer_graphe_creux(creux_sommets, creux_max_voisins)
+end = time.time()
+print(f'Génération terminée en {timedelta(seconds=end - start)}')
+
+# Note: la génération de graphe dense a plus de 3000 sommets peut prendre un temps
+# significatif selon la machine, lancer ce test que lorsque nécessaire
+#dense_sommets = 15000
+dense_sommets = 2000
+dense_prob_connecte = 0.90
+print(f"Génération graphe dense... (V = {dense_sommets}, {int(dense_prob_connecte * 100)}% connectés)")
+start = time.time()
+graphe_dense = graphs.generer_graphe_dense(dense_sommets, dense_prob_connecte)
+end = time.time()
+print(f'Génération terminée en {timedelta(seconds=end - start)}')
+
+print('Test Djikstra Heap avec un graphe creux')
+start = time.time()
+result = graphs.dijkstra_heap(graphe_creux, 0)
+end = time.time()
+print(f'Djikstra Heap graphe creux terminé en {timedelta(seconds=end - start)}')
+print(f'Résultat: {result}')
+
+print('Test Djikstra Naïf avec un graphe creux')
+start = time.time()
+result = graphs.dijkstra_naif(graphe_creux, 0)
+end = time.time()
+print(f'Djikstra Naïf graphe creux terminé en {timedelta(seconds=end - start)}')
+print(f'Résultat: {result}')
+
+print('\nTest Djikstra Heap avec un graphe dense')
+start = time.time()
+result = graphs.dijkstra_heap(graphe_dense, 0)
+end = time.time()
+print(f'Djikstra Heap graphe dense terminé en {timedelta(seconds=end - start)}')
+print(f'Résultat: {result}')
+
+print('Test Djikstra Naïf avec un graphe dense')
+start = time.time()
+result = graphs.dijkstra_naif(graphe_dense, 0)
+end = time.time()
+print(f'Djikstra Naïf graphe dense terminé en {timedelta(seconds=end - start)}')
+print(f'Résultat: {result}')
+
+print("\n2.2 : ")
 
 graph_liste = graphs.ListGraph({
     'A': [('B', 4), ('C', 2)],
@@ -94,61 +158,6 @@ graph_matrice = graphs.MatrixGraph(
     ]
 )
 distances2, predecessors2 = graphs.bellman_ford(graph_matrice, 'A')
-
-print('\nTest Djikstra Heap avec graphe simple')
-print(graphs.dijkstra_heap(weighted_list_graph, 'A'))
-print('Test Djikstra Naïf avec graphe simple')
-print(graphs.dijkstra_naif(weighted_list_graph, 'A'))
-
-creux_sommets = 15000
-creux_max_voisins = 3
-print(f"Génération graphe creux... (V = {creux_sommets}, max {creux_max_voisins} voisins)")
-start = time.time()
-graphe_creux = graphs.generer_graphe_creux(creux_sommets, creux_max_voisins)
-end = time.time()
-print(f'Génération terminée en {timedelta(seconds=end - start)}')
-
-# Note: la génération de graphe dense a plus de 3000 sommets peut prendre un temps
-# significatif selon la machine, lancer ce test que lorsque nécessaire
-#dense_sommets = 15000
-# dense_sommets = 2000
-# dense_prob_connecte = 0.90
-# print(f"Génération graphe dense... (V = {dense_sommets}, {int(dense_prob_connecte * 100)}% connectés)")
-# start = time.time()
-# graphe_dense = graphs.generer_graphe_dense(2000, 0.90)
-# graphe_dense = graphs.generer_graphe_dense(dense_sommets, dense_prob_connecte)
-# end = time.time()
-# print(f'Génération terminée en {timedelta(seconds=end - start)}')
-# print("Test du plus court chemin dans un graphe non pondéré :", graphs.plus_court_chemin_bfs(graphe_plus_court_chemin, "A", "F"))
-
-print('Test Djikstra Heap avec un graphe creux')
-start = time.time()
-result = graphs.dijkstra_heap(graphe_creux, 0)
-end = time.time()
-print(f'Djikstra Heap graphe creux terminé en {timedelta(seconds=end - start)}')
-# print(f'Résultat: {result}')
-
-print('Test Djikstra Naïf avec un graphe creux')
-start = time.time()
-result = graphs.dijkstra_naif(graphe_creux, 0)
-end = time.time()
-print(f'Djikstra Naïf graphe creux terminé en {timedelta(seconds=end - start)}')
-# print(f'Résultat: {result}')
-
-# A PARTIR DE LA CA NE MARCHE PAS
-# print('Test Djikstra Heap avec un graphe dense')
-# start = time.time()
-# result = graphs.dijkstra_heap(graphs.generer_graphe_dense, 0)
-# end = time.time()
-# print(f'Djikstra Heap graphe dense terminé en {timedelta(seconds=end - start)}')
-# # print(f'Résultat: {result}')
-
-# print('Test Djikstra Naïf avec un graphe dense')
-# start = time.time()
-# result = graphs.dijkstra_naif(graphs.generer_graphe_dense, 0)
-# end = time.time()
-# print(f'Djikstra Naïf graphe dense terminé en {timedelta(seconds=end - start)}')
-# print(f'Résultat: {result}')
 
 print("\nTest de l'algo de Bellman-Ford :")
 print("\nPour un graphe en liste d'adjacence :")
