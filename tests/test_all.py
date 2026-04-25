@@ -52,7 +52,7 @@ graphe_plus_court_chemin = {
     "F": []
 }
 
-print("---- Exercice 1 ----")  
+print("---- Exercice 1 ----")
 print("Graphe à matrice d'adjacence")
 graphs.MatrixGraph(['A', 'B', 'C'], [[1, 2, 3], [4, 5, 6], [7, 8, 9]]).print()
 print("Graphe à liste d'adjacence")
@@ -169,6 +169,45 @@ print("\nPour un graphe en matrice :")
 print("Distances :", distances2)
 print("Prédécesseurs :", predecessors2)
 print("Chemin A -> E :", graphs.reconstruct_path(predecessors2, 'A', 'E'))
+
+print("\n2.3 - Algorithme de Floyd-Warshall :")
+print("- Graphes sans cycles négatifs :")
+print("V = 10")
+graphe = graphs.generer_graphe_matrice(10)
+graphe.print_spaced()
+print("Plus court chemins : ")
+graphs.floyd_warshall(graphe).print()
+
+print("\nV = 50")
+graphe = graphs.generer_graphe_matrice(50)
+graphe.print_spaced()
+print("Plus court chemins : ")
+graphs.floyd_warshall(graphe).print()
+
+print("\nV = 100")
+graphe = graphs.generer_graphe_matrice(100)
+graphe.print_spaced()
+print("Plus court chemins : ")
+graphs.floyd_warshall(graphe).print()
+
+print("\n\n- Graphes avec cycles négatifs :")
+print("V = 10")
+graphe = graphs.generer_graphe_matrice(10, True)
+graphe.print_spaced()
+print("Plus court chemins : ")
+graphs.floyd_warshall(graphe)
+
+print("\nV = 50")
+graphe = graphs.generer_graphe_matrice(50, True)
+graphe.print_spaced()
+print("Plus court chemins : ")
+graphs.floyd_warshall(graphe)
+
+print("\nV = 100")
+graphe = graphs.generer_graphe_matrice(100, True)
+graphe.print_spaced()
+print("Plus court chemins : ")
+graphs.floyd_warshall(graphe)
 
 input("\nAppuyez sur Entrée pour continuer vers l'exo 3")
 

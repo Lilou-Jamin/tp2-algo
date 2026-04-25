@@ -45,6 +45,14 @@ class MatrixGraph(BaseGraph):
         for index, row in enumerate(self.matrix):
             print(self.vertices[index] + " | " + " ".join(map(lambda value : str(value), row)))
 
+    def print_spaced(self):
+        """affiche le graphe sous forme de matrice d'adjacence de manière lisible avec les poids espacés par tabulation"""
+        first_row = "\\\t|\t" + "\t".join(self.vertices)
+        print(first_row)
+        print('-' * len(first_row.expandtabs(4)))
+        for index, row in enumerate(self.matrix):
+            print(self.vertices[index] + "\t|\t" + "\t".join(map(lambda value : str(value), row)))
+
 
 class ListGraph(BaseGraph):
     def __init__(self, adjacency_list):
@@ -385,6 +393,66 @@ def reconstruct_path(predecessors, source, target):
     if not path or path[0] != source:
         return None
     return path
+
+
+def generer_graphe_matrice(n_sommets, cycle_negatif=False, probabilite=0.4, poids_min=-15, poids_max=15):
+    """
+    Génère une matrice d'adjacence de taille n_sommets * n_sommets.
+    :param n_sommets: le nombre de sommets à générer (V)
+    :param cycle_negatif: le graphe doit il contenir ou non des cycles de poids négatifs
+    :param probabilite: probabilité (entre 0 et 1) qu'une arête existe entre deux sommets.
+    :param poids_min: la valeur minimale pour un poids
+    :param poids_max: la valeur maximale pour un poids
+    :return:
+    """
+    inf = float('inf')
+    graphe = [[inf] * n_sommets for _ in range(n_sommets)]
+
+    # On attribue un "potentiel" aléatoire à chaque sommet
+    potentiels = [random.randint(0, 100) for _ in range(n_sommets)]
+
+    for i in range(n_sommets):
+        graphe[i][i] = 0 # La distance à soi-même est toujours de 0
+        for j in range(n_sommets):
+            if i != j and random.random() < probabilite:
+                if cycle_negatif:
+                    graphe[i][j] = random.randint(poids_min, poids_max)
+                else:
+                    # Utilisation des potentiels pour garantir aucun cycle négatif
+                    cout_positif_de_base = random.randint(1, 20)
+                    # La différence de potentiel peut rendre le poids final négatif
+                    poids = cout_positif_de_base + potentiels[j] - potentiels[i]
+                    graphe[i][j] = poids
+
+        # Injection forcée d'un cycle négatif (pour être sûr qu'il y en a au moins un)
+        if cycle_negatif and n_sommets >= 3:
+            # On sélectionne 3 sommets au hasard
+            sommets = random.sample(range(n_sommets), 3)
+            s1, s2, s3 = sommets[0], sommets[1], sommets[2]
+
+            # On écrase les valeurs pour créer un cycle s1 -> s2 -> s3 -> s1
+            graphe[s1][s2] = -10
+            graphe[s2][s3] = -10
+            graphe[s3][s1] = -10
+
+    return MatrixGraph([str(i) for i in range(1, n_sommets + 1)], graphe)
+
+
+def floyd_warshall(graph: MatrixGraph):
+    longueur = len(graph.matrix)
+    distance = [ligne[:] for ligne in graph.matrix]
+    for k in range(longueur):
+        for i in range(longueur):
+            for j in range(longueur):
+                distance[i][j] = min(distance[i][j], distance[i][k] + distance[k][j])
+
+    # Détection des cycles des poids négatifs
+    for i in range(longueur):
+        if distance[i][i] < 0:
+            print(f"Cycle de poids négatif détecté impliquant le sommet '{graph.vertices[i]}'.")
+            return None
+
+    return MatrixGraph([str(i) for i in range(1, longueur + 1)], distance)
 
 
 def dijkstra_heap(weighted_graph: WeightedListGraph, start):
