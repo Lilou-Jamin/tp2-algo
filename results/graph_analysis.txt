@@ -7,11 +7,25 @@ La différence principale est leur stratégie :
 - BFS explore par niveaux, ce qui le rend plus adapté au calcul du plus court chemin dans un graphe pondéré
 
 
-# Comparaison Bellman-Ford / Djikstra
+# Comparaison Bellman-Ford / Dijkstra
 Bellman-Ford calcule les plus courts chemins depuis un sommet source dans un graphe pondéré. 
 Sa complexité est O(V × E) car il relâche toutes les arêtes |V| - 1 fois
 Son principal avantage est qu’il accepte les arêtes de poids négatif, contrairement à Dijkstra. Il permet aussi de détecter la présence de cycles négatifs.
 On l’utilise donc pour les graphes pondérés contenant potentiellement des poids négatifs ou lorsqu’on veut vérifier qu’aucun cycle négatif n’existe.
+
+
+# Comparaison des graphes dense et creux pour Dijkstra naif / heap
+Pour la génération des graphes :
+- La génération de graphe creux est très rapide comme il n'y a que très peu de connexions entre les différents sommets
+- La génération de graphe dense consomme beaucoup plus de resources comme on créé des connexions entre presque tous les sommets
+
+Concernant l'exécution des algorithmes naif et heap, la théorie voudrait ceci :
+- Pour un graphe creux, la version Dijkstra heap est plus efficace que la version naive
+- Pour un graphe dense, la version Dijkstra naive est plus efficace que la version heap
+
+Dans la pratique avec notre implémentation, la première théorie est bien démontrée mais pour la seconde, la version heap reste beaucoup plus rapide.
+Une des raisons pour cela semble être le fait que la version heap de l'algorithme utilise "heapq" qui offre une implémentation des tas mins et tas maxs très optimisée utilisant le C.
+L'implémentation du Dijkstra naif proposée ici n'utilise que des structures de données Python qui sont donc bien moins optimisées que les structures de données de heapq.
 
 
 # Comparaison Ford-Fulkerson / Edmonds-Karp
