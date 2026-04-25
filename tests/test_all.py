@@ -6,6 +6,38 @@ import src.np_hard as np_hard
 import src.probabilistic as probabilistic
 import src.trees as trees
 
+def generer_listes_pour_arbre(taille):
+    """Génère trois listes de test : séquentielle, décroissante et aléatoire."""
+    sequentiel = list(range(1, taille + 1))
+    decroissant = list(range(taille, 0, -1))
+
+    # Aléatoire : on utilise les mêmes nombres, mais on les mélange
+    # random.sample garantit qu'il n'y a pas de doublons
+    import random
+    aleatoire = random.sample(range(1, taille + 1), taille)
+
+    return [[f'séquentielle ({1}..{taille})', sequentiel], [f'décroissante ({taille}..{1})', decroissant], ['aléatoire', aleatoire]]
+
+def avl_benchmark(taille):
+    listes = generer_listes_pour_arbre(taille)
+    arbre = trees.AdelsonVelskyLandisTree()
+    for liste in listes:
+        print(f"\n\nListe {liste[0]} :")
+        arbre = trees.AdelsonVelskyLandisTree()
+        print("\nInsertion...")
+        start = time.time()
+        for i in liste[1]:
+            arbre.insert(i)
+        end = time.time()
+        print(f'Insertion terminée en {timedelta(seconds=end - start)}')
+        print(f"\nProfondeur maximale : {arbre.get_max_depth()}")
+        print(f"Rotations simples effectuées : {arbre.simple_rotations}")
+        print(f"Rotations doubles effectuées : {arbre.double_rotations}")
+
+    print('Dernier arbre traité :')
+    arbre.print()
+
+
 graph_data = {
     'A': ['B', 'C'],
     'B': ['A'],
@@ -211,7 +243,7 @@ graphs.floyd_warshall(graphe)
 
 input("\nAppuyez sur Entrée pour continuer vers l'exo 3")
 
-print("\n---- Exercice 3 ----")  
+print("\n---- Exercice 3 ----")
 
 capacites = {
     's': {'a': 10, 'b': 5},
@@ -235,3 +267,50 @@ print("Flots sur les arêtes :")
 for u in flot:
     for v in flot[u]:
         print(f"{u} -> {v} : {flot[u][v]}")
+
+input("\nAppuyez sur Entrée pour continuer vers l'exo 4")
+
+print("\n---- Exercice 4 ----")
+
+print("4.1 - BST - Binary Search Tree")
+arbre = trees.BinarySearchTree()
+
+print("\nInsertion")
+valeurs = [50, 30, 20, 40, 70, 60, 80]
+print(f"Valeurs à ajouter: {valeurs}")
+for v in valeurs:
+    arbre.insert(v)
+
+print(f'Arbre après ajout :\n')
+arbre.print()
+
+print("\nParcours infixe (trié) :", arbre.in_order_traversal())
+
+print("\nRecherche")
+print("\nRecherche 40 : ", "Trouvé" if arbre.search(40) else "Non trouvé")
+print("Recherche 90 : ", "Trouvé" if arbre.search(90) else "Non trouvé")
+
+print("\nSuppression")
+print("\nSuppression de 20 (feuille)...")
+arbre.remove(20)
+arbre.print()
+
+print("\nSuppression de 50 (racine avec deux enfants)...")
+arbre.remove(50)
+arbre.print()
+
+print("\nBST avec valeurs séquentielles :")
+arbre = trees.BinarySearchTree()
+
+valeurs = [10, 20, 30, 40, 50, 60, 70, 80]
+print(f"Valeurs à ajouter: {valeurs}")
+for v in valeurs:
+    arbre.insert(v)
+
+arbre.print()
+
+print("\n4.2 - AVL - Adelson-Velsky & Landis Tree")
+
+print("Arbre de 100 éléments :")
+avl_benchmark(100)
+
