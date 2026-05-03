@@ -1,10 +1,35 @@
 import time
 from datetime import timedelta
+from math import pi
+from random import shuffle, randint
 
 import src.graphs as graphs
 import src.np_hard as np_hard
 import src.probabilistic as probabilistic
 import src.trees as trees
+
+def humanize_number(number):
+    # Retourne le nombre sous forme de string avec des espaces entre chaque groupe de 3 chiffres
+    digits = []
+
+    # On récupère tous les chiffres 1 par 1
+    while number > 0:
+        digits.append(number % 10)
+        number //= 10
+
+    # On assemble les chiffres 1 par 1 et quand on arrive à 3 chiffres consécutifs, on insère un espace
+    formatted_number = ''
+    k = 0
+    for digit in digits:
+        if k > 2:
+            formatted_number += ' '
+            k = 0
+
+        formatted_number += str(digit)
+        k += 1
+
+    # Comme on a récupéré les chiffres dans l'ordre inverse, on inverse la chaine de caractères finale.
+    return formatted_number[::-1]
 
 def generer_listes_pour_arbre(taille):
     """Génère trois listes de test : séquentielle, décroissante et aléatoire."""
@@ -327,4 +352,113 @@ arbre.print()
 
 avl_rb_benchmark(100)
 
+input("\nAppuyez sur Entrée pour continuer vers l'exo 5")
 
+print("\n---- Exercice 5 ----")
+print("5.1 - Randomized QuickSort")
+
+print("Tri de liste de 100 000 éléments séquentiels")
+random_list = [x for x in range(100_000)]
+deterministic_quicksorted_list = random_list.copy()
+randomized_quicksorted_list = random_list.copy()
+
+start = time.time()
+try:
+    probabilistic.deterministic_quicksort(deterministic_quicksorted_list)
+    end = time.time()
+    print(f'QuickSort Déterministe : {timedelta(seconds=end - start)}')
+except RecursionError:
+    print('QuickSort Déterministe : RecursionError')
+
+start = time.time()
+probabilistic.randomized_quicksort(randomized_quicksorted_list)
+end = time.time()
+print(f'QuickSort Randomized : {timedelta(seconds=end - start)}')
+
+start = time.time()
+random_list.sort()
+end = time.time()
+print(f'Tri natif Python : {timedelta(seconds=end - start)}')
+
+print("\n\nTri de liste de 100 000 éléments aléatoires")
+shuffle(random_list)
+
+deterministic_quicksorted_list = random_list.copy()
+randomized_quicksorted_list = random_list.copy()
+
+start = time.time()
+probabilistic.deterministic_quicksort(deterministic_quicksorted_list)
+end = time.time()
+print(f'QuickSort Déterministe : {timedelta(seconds=end - start)}')
+
+start = time.time()
+probabilistic.randomized_quicksort(randomized_quicksorted_list)
+end = time.time()
+print(f'QuickSort Randomized : {timedelta(seconds=end - start)}')
+
+start = time.time()
+random_list.sort()
+end = time.time()
+print(f'Tri natif Python : {timedelta(seconds=end - start)}')
+print(f'\nQuickSort Déterministe = Tri natif Python : {random_list == deterministic_quicksorted_list}')
+print(f'QuickSort Randomized = Tri natif Python : {random_list == randomized_quicksorted_list}')
+
+print("\n\n5.2 - Sélection (k-ème) (QuickSelect)")
+random_list = [randint(0, 2_000_000_000) for _ in range(100_000)]
+random_list.sort()
+print("QuickSelect sur une liste de 100 000 éléments séquentiels")
+list_for_deterministic_quickselect = random_list.copy()
+list_for_randomized_quickselect = random_list.copy()
+
+for k in [0, len(random_list) // 2, len(random_list) - 1]:
+    print()
+    start = time.time()
+    try:
+        result = probabilistic.deterministic_quickselect(list_for_deterministic_quickselect, k)
+        end = time.time()
+        print(f'QuickSelect Déterministe (k: {k}) : {timedelta(seconds=end - start)}. Résultat : {result}')
+    except RecursionError:
+        print(f'QuickSelect Déterministe (k: {k}) : RecursionError')
+
+    start = time.time()
+    result = probabilistic.randomized_quickselect(list_for_randomized_quickselect, k)
+    end = time.time()
+    print(f'QuickSelect Randomized (k: {k}) : {timedelta(seconds=end - start)}. Résultat : {result}')
+
+print("\n\nQuickSelect sur une liste de 100 000 éléments aléatoires")
+shuffle(random_list)
+list_for_deterministic_quickselect = random_list.copy()
+list_for_randomized_quickselect = random_list.copy()
+
+for k in [0, len(random_list) // 2, len(random_list) - 1]:
+    print()
+    start = time.time()
+    try:
+        result = probabilistic.deterministic_quickselect(list_for_deterministic_quickselect, k)
+        end = time.time()
+        print(f'QuickSelect Déterministe (k: {k}) : {timedelta(seconds=end - start)}. Résultat : {result}')
+    except RecursionError:
+        print(f'QuickSelect Déterministe (k: {k}) : RecursionError')
+
+    start = time.time()
+    result = probabilistic.randomized_quickselect(list_for_randomized_quickselect, k)
+    end = time.time()
+    print(f'QuickSelect Randomized (k: {k}) : {timedelta(seconds=end - start)}. Résultat : {result}')
+
+print("\n\n5.3 - Estimation de Pi (Monte Carlo)")
+samples = [10, 100, 1_000, 10_000, 100_000, 1_000_000, 10_000_000]
+
+print(f"{'N':<12} | {'Estimation de Pi':<20} | {'Erreur Absolue':<18} | {"Durée de l'estimation":<20}")
+print("-" * 80)
+for n in samples:
+    start = time.time()
+    estimation = probabilistic.estimate_pi(n)
+    end = time.time()
+
+    # L'erreur absolue est la différence positive entre la vraie valeur et l'estimation
+    erreur = abs(pi - estimation)
+    print(f"{humanize_number(n):<12} | {estimation:<20.6f} | {erreur:<18.6f} | {str(timedelta(seconds=end - start)):<20}")
+
+input("\nAppuyez sur Entrée pour continuer vers l'exo 6")
+
+print("\n---- Exercice 6 ----")

@@ -1,0 +1,16 @@
+5.1 - Randomized QuickSort
+
+Les tests démontrent que le Randomized QuickSort est plus adapté que le QuickSort déterministe car il évite le cas de O(n²) : comme le pivot est aléatoire à chaque itération, on a une moyenne de O(n log n).
+Sur des listes séquentielles (déjà triées), le QuickSort déterministe atteint très vite la limite de récursion tandis que le Randomized QuickSort n'atteint pas cette limite.
+Cependant, son temps d'exécution est variable car le pivot est toujours choisi aléatoirement et donc sera différent entre chaque exécution.
+C'est donc un algorithme de type Las Vegas.
+
+5.2 - Sélection (k-ème) (QuickSelect)
+
+On remarque avec les tests que le QuickSelect Déterministe peut avoir une durée plus longue que le QuickSelect Randomized et atteint aussi la limite de récursion sur les listes séquentielles.
+Le QuickSelect Randomized a un temps d'exécution variable. Il peut être plus ou moins rapide  que le QuickSelect Déterministe selon les données. mais son pire cas reste en général plus rapide que le QuickSelect Déterministe pour le même résultat.
+
+5.3 Estimate de Pi (Monte Carlo)
+
+Cet algorithme d'estimation de Pi révèle le fait que les résultats ne sont pas toujours les mêmes avec le même N utilisé. La raison est qu'on utilise un nombre aléatoire pour l'estimation et les algorithmes de type Monte Carlo ne garantissent pas un résultat exact mais leur temps d'exécution est garanti.
+Plus le nombre d'itérations de l'algorithme est élevé, plus l'on se rapproche de la valeur de Pi. Mais plus la valeur de N est élevée, plus le temps d'exécution sera élevé.
