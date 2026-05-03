@@ -248,3 +248,176 @@ class AdelsonVelskyLandisTree:
             self.__print_recursive(node.right, level + 1)
             print('    ' * level + '->', node.value)
             self.__print_recursive(node.left, level + 1)
+
+
+class RedBlackNode:
+    def __init__(self, value):
+        self.value = value
+        self.parent = None
+        self.left = None
+        self.right = None
+        self.color = 1  # 1 = RED, 0 = BLACK. Un nouveau nœud est toujours RED.
+
+
+class RedBlackTree:
+    def __init__(self):
+        # 1. Création de la sentinelle TNULL (remplace les 'None')
+        self.TNULL = RedBlackNode(0)
+        self.TNULL.color = 0  # Les feuilles TNULL sont toujours noires
+        self.root = self.TNULL
+
+    # --- RECHERCHE ET PARCOURS ---
+    def search(self, value):
+        return self.__search_recursive(self.root, value)
+
+    def __search_recursive(self, node, value):
+        if node == self.TNULL or value == node.value:
+            return node
+        if value < node.value:
+            return self.__search_recursive(node.left, value)
+        return self.__search_recursive(node.right, value)
+
+    def in_order(self):
+        result = []
+        self.__in_order_recursive(self.root, result)
+        return result
+
+    def __in_order_recursive(self, node, result):
+        if node != self.TNULL:
+            self.__in_order_recursive(node.left, result)
+            result.append(node.value)
+            self.__in_order_recursive(node.right, result)
+
+    # --- ROTATIONS (Nécessitent la gestion du 'parent') ---
+    def __left_rotate(self, x):
+        y = x.right
+        x.right = y.left
+        if y.left != self.TNULL:
+            y.left.parent = x
+        y.parent = x.parent
+        if x.parent is None:
+            self.root = y
+        elif x == x.parent.left:
+            x.parent.left = y
+        else:
+            x.parent.right = y
+        y.left = x
+        x.parent = y
+
+    def __right_rotate(self, x):
+        y = x.left
+        x.left = y.right
+        if y.right != self.TNULL:
+            y.right.parent = x
+        y.parent = x.parent
+        if x.parent is None:
+            self.root = y
+        elif x == x.parent.right:
+            x.parent.right = y
+        else:
+            x.parent.left = y
+        y.right = x
+        x.parent = y
+
+    def insert(self, value):
+        new_node = RedBlackNode(value)
+        new_node.left = self.TNULL
+        new_node.right = self.TNULL
+
+        parent = None
+        current = self.root
+
+        # Descente classique de BST pour trouver où insérer la valeur
+        while current != self.TNULL:
+            parent = current
+            if new_node.value < current.value:
+                current = current.left
+            else:
+                current = current.right
+
+        new_node.parent = parent
+
+        # Attachement du nouveau noeud
+        if parent is None:
+            self.root = new_node
+        elif new_node.value < parent.value:
+            parent.left = new_node
+        else:
+            parent.right = new_node
+
+        # Si c'est la racine, on la met en noir et on s'arrête
+        if new_node.parent is None:
+            new_node.color = 0
+            return
+
+        # Si le grand-parent n'existe pas, pas besoin de réparer l'arbre
+        if new_node.parent.parent is None:
+            return
+
+        # 3. Réparation des règles Rouge-Noir
+        self.__fix_insert(new_node)
+
+    def __fix_insert(self, k):
+        # On répare tant que le parent de k est RED (Violation de la règle 4)
+        while k.parent.color == 1:
+            # Le parent est l'enfant gauche du grand-parent
+            if k.parent == k.parent.parent.left:
+                uncle = k.parent.parent.right
+
+                # CAS 1 : L'oncle est RED (ON effectue seulement une recoloration)
+                if uncle.color == 1:
+                    uncle.color = 0
+                    k.parent.color = 0
+                    k.parent.parent.color = 1
+                    k = k.parent.parent
+                else:
+                    # CAS 2 : L'oncle est BLACK et on est un enfant droit -> Rotation Gauche
+                    if k == k.parent.right:
+                        k = k.parent
+                        self.__left_rotate(k)
+
+                    # CAS 3 : L'oncle est BLACK et on est un enfant gauche -> Rotation Droite + recoloration
+                    k.parent.color = 0
+                    k.parent.parent.color = 1
+                    self.__right_rotate(k.parent.parent)
+
+            # Le parent est l'enfant droit du grand-parent (Symétrie)
+            else:
+                uncle = k.parent.parent.left
+
+                # CAS 1
+                if uncle.color == 1:
+                    uncle.color = 0
+                    k.parent.color = 0
+                    k.parent.parent.color = 1
+                    k = k.parent.parent
+                else:
+                    # CAS 2
+                    if k == k.parent.left:
+                        k = k.parent
+                        self.__right_rotate(k)
+
+                    # CAS 3
+                    k.parent.color = 0
+                    k.parent.parent.color = 1
+                    self.__left_rotate(k.parent.parent)
+
+            if k == self.root:
+                break
+
+        # La racine reste toujours noire
+        self.root.color = 0
+
+    def print(self):
+        self.__print_recursive(None, 0)
+
+    # --- AFFICHAGE ---
+    def __print_recursive(self, node, level):
+        if node is None:
+            node = self.root
+
+        if node != self.TNULL:
+            self.__print_recursive(node.right, level + 1)
+            print('    ' * level + f'-> {node.value} ({"R" if node.color == 1 else "B"})')
+            self.__print_recursive(node.left, level + 1)
+

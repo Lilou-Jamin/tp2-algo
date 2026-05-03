@@ -18,9 +18,11 @@ def generer_listes_pour_arbre(taille):
 
     return [[f'séquentielle ({1}..{taille})', sequentiel], [f'décroissante ({taille}..{1})', decroissant], ['aléatoire', aleatoire]]
 
-def avl_benchmark(taille):
+def avl_rb_benchmark(taille):
+    print("\n4.2 - AVL - Adelson-Velsky & Landis Tree")
+    print("Arbre de 100 éléments :")
+
     listes = generer_listes_pour_arbre(taille)
-    arbre = trees.AdelsonVelskyLandisTree()
     for liste in listes:
         print(f"\n\nListe {liste[0]} :")
         arbre = trees.AdelsonVelskyLandisTree()
@@ -33,6 +35,20 @@ def avl_benchmark(taille):
         print(f"\nProfondeur maximale : {arbre.get_max_depth()}")
         print(f"Rotations simples effectuées : {arbre.simple_rotations}")
         print(f"Rotations doubles effectuées : {arbre.double_rotations}")
+
+    print("\n4.3 - Red-Black")
+    print("Arbre de 100 éléments :")
+
+    arbre = trees.RedBlackTree()
+    for liste in listes:
+        print(f"\n\nListe {liste[0]} :")
+        arbre = trees.RedBlackTree()
+        print("\nInsertion...")
+        start = time.time()
+        for i in liste[1]:
+            arbre.insert(i)
+        end = time.time()
+        print(f'Insertion terminée en {timedelta(seconds=end - start)}')
 
     print('Dernier arbre traité :')
     arbre.print()
@@ -309,8 +325,6 @@ for v in valeurs:
 
 arbre.print()
 
-print("\n4.2 - AVL - Adelson-Velsky & Landis Tree")
+avl_rb_benchmark(100)
 
-print("Arbre de 100 éléments :")
-avl_benchmark(100)
 

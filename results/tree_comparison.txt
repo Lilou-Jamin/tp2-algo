@@ -1,0 +1,4 @@
+4.2 / 4.3 - Comparaison AVL contre Red-Black :
+On note que l'AVL a un équilibrage plus strict ce qui ammène à plus de rotations lors des insertions / suppressions alors que le Red-Black effectue moins de rotations grâce à son système d'équilibrage plus souple qui respecte les 5 propriétés de couleur.
+Au final, l'AVL est optimisé pour la recherche, tandis que le Red-Black est le compromis parfait pour un système qui fait autant de recherches que d'insertions / suppressions.
+
