@@ -326,7 +326,9 @@ import src.trees as trees
 # print(f'Arbre après ajout :\n')
 # arbre.print()
 
-# print("\nParcours infixe (trié) :", arbre.in_order_traversal())
+print("\nParcours infixe (trié) :", arbre.traversal('inordre'))
+print("Parcours préfixe (racine d'abord) :", arbre.traversal('preordre'))
+print("Parcours postfixe (enfants d'abord) :", arbre.traversal('postordre'))
 
 # print("\nRecherche")
 # print("\nRecherche 40 : ", "Trouvé" if arbre.search(40) else "Non trouvé")

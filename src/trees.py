@@ -74,16 +74,33 @@ class BinarySearchTree:
             current_node = current_node.left
         return current_node
 
-    def in_order_traversal(self):
+    def traversal(self, type = 'inordre'):
+        """
+        Traverse l'arbre binaire et retourne un tableau de la traversée.
+        :param type: Le type de traversée : "inordre", "preordre" ou "postordre".
+        :return: Le tableau résultant de la traversée.
+        """
+        if type != 'inordre' and type != 'preordre' and type != 'postordre':
+            raise ValueError('Type de traversée invalide.')
+
         resultat = []
-        self.__in_order_traversal_recursive(self.root, resultat)
+        self.__traversal_recursive(self.root, resultat, type)
         return resultat
 
-    def __in_order_traversal_recursive(self, node, result):
+    def __traversal_recursive(self, node, result, type):
         if node is not None:
-            self.__in_order_traversal_recursive(node.left, result)
-            result.append(node.value)
-            self.__in_order_traversal_recursive(node.right, result)
+            if type == 'preordre':
+                result.append(node.value)
+
+            self.__traversal_recursive(node.left, result, type)
+
+            if type == 'inordre':
+                result.append(node.value)
+
+            self.__traversal_recursive(node.right, result, type)
+
+            if type == 'postordre':
+                result.append(node.value)
 
     def print(self):
         self.__print_recursive(self.root, 0)
