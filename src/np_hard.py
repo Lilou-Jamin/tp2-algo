@@ -270,3 +270,51 @@ def tsp_programmation_dynamique_mesure(graphe, depart=0, cout_optimal=None):
         "ratio": ratio
     }
 
+def est_valide(graphe, sommet, couleur, coloration):
+    """
+    check si on peut donner couleur à sommet sans conflit avec ses voisins
+    """
+    for voisin in graphe.get(sommet, []):
+        if coloration.get(voisin) == couleur:
+            return False
+    return True
+
+
+def coloration_k_couleurs(graphe, k):
+    """
+    colorie le graphe avec k couleurs si possible
+    graphe -> dict[sommet, list[sommet]]
+    k -> nombre de couleurs disponibles
+    renvoie coloration du graphe ou none si impossible
+    """
+    sommets = list(graphe.keys())
+    couleurs = list(range(k))
+    coloration = {}
+
+    def backtrack(index):
+        if index == len(sommets):
+            return True
+        sommet = sommets[index]
+
+        for couleur in couleurs:
+            if est_valide(graphe, sommet, couleur, coloration):
+                coloration[sommet] = couleur
+
+                if backtrack(index + 1):
+                    return True
+                del coloration[sommet]
+        return False
+    if backtrack(0):
+        return coloration
+    return None
+
+def coloration_minimale(graphe):
+    """
+    trouve le nombre minimal de couleurs nécessaires
+    """
+    n = len(graphe)
+    for k in range(1, n + 1):
+        coloration = coloration_k_couleurs(graphe, k)
+        if coloration is not None:
+            return k, coloration
+    return None, None

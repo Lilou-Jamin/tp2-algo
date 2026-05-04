@@ -326,7 +326,9 @@ import src.trees as trees
 # print(f'Arbre après ajout :\n')
 # arbre.print()
 
-# print("\nParcours infixe (trié) :", arbre.in_order_traversal())
+print("\nParcours infixe (trié) :", arbre.traversal('inordre'))
+print("Parcours préfixe (racine d'abord) :", arbre.traversal('preordre'))
+print("Parcours postfixe (enfants d'abord) :", arbre.traversal('postordre'))
 
 # print("\nRecherche")
 # print("\nRecherche 40 : ", "Trouvé" if arbre.search(40) else "Non trouvé")
@@ -465,7 +467,9 @@ import src.trees as trees
 print("\n---- Exercice 6 ----")
 print("\n--- TSP par force brute ---")
 graphe_8 = graphs.generer_graphe_dense(8)
+graphe_10 = graphs.generer_graphe_dense(10)
 graphe_12 = graphs.generer_graphe_dense(12)
+graphe_15 = graphs.generer_graphe_dense(15)
 graphe_20 = graphs.generer_graphe_dense(20)
 
 print("\nTest avec n = 8")
@@ -476,6 +480,14 @@ print("Temps :", res_graphe_8["temps"], "secondes")
 print("Qualité :", res_graphe_8["qualite"])
 print("Ratio :", res_graphe_8["ratio"])
 
+print("\nTest avec n = 10")
+res_graphe_10 = np_hard.tsp_force_brute(graphe_10, depart=0)
+print("Coût optimal :", res_graphe_10["cout"])
+print("Chemin optimal :", res_graphe_10["chemin"])
+print("Temps :", res_graphe_10["temps"], "secondes")
+print("Qualité :", res_graphe_10["qualite"])
+print("Ratio :", res_graphe_10["ratio"])
+
 print("\nTest avec n = 12")
 print("Prend beaucoup de temps, vous pouvez décommenter le test si nécessaire")
 # res_graphe_12 = np_hard.tsp_force_brute(graphe_12, depart=0)
@@ -484,6 +496,15 @@ print("Prend beaucoup de temps, vous pouvez décommenter le test si nécessaire"
 # print("Temps :", res_graphe_12["temps"], "secondes")
 # print("Qualité :", res_graphe_12["qualite"])
 # print("Ratio :", res_graphe_12["ratio"])
+
+print("\nTest avec n = 15")
+print("Prend beaucoup de temps, vous pouvez décommenter le test si nécessaire")
+# res_graphe_15 = np_hard.tsp_force_brute(graphe_15, depart=0)
+# print("Coût optimal :", res_graphe_15["cout"])
+# print("Chemin optimal :", res_graphe_15["chemin"])
+# print("Temps :", res_graphe_15["temps"], "secondes")
+# print("Qualité :", res_graphe_15["qualite"])
+# print("Ratio :", res_graphe_15["ratio"])
 
 print("\nTest avec n = 20")
 print("Prend beaucoup de temps, vous pouvez décommenter le test si nécessaire")
@@ -501,11 +522,23 @@ print("Coût du chemin trouvé :", res_graphe_8["cout"])
 print("Chemin trouvé :", res_graphe_8["chemin"])
 print("Temps :", res_graphe_8["temps"], "secondes")
 
+print("\nTest avec n = 10")
+res_graphe_10 = np_hard.tsp_nearest_neighbor(graphe_10, depart=0)
+print("Coût du chemin trouvé :", res_graphe_10["cout"])
+print("Chemin trouvé :", res_graphe_10["chemin"])
+print("Temps :", res_graphe_10["temps"], "secondes")
+
 print("\nTest avec n = 12")
 res_graphe_12 = np_hard.tsp_nearest_neighbor(graphe_12, depart=0)
 print("Coût du chemin trouvé :", res_graphe_12["cout"])
 print("Chemin trouvé :", res_graphe_12["chemin"])
 print("Temps :", res_graphe_12["temps"], "secondes")
+
+print("\nTest avec n = 15")
+res_graphe_15 = np_hard.tsp_nearest_neighbor(graphe_15, depart=0)
+print("Coût du chemin trouvé :", res_graphe_15["cout"])
+print("Chemin trouvé :", res_graphe_15["chemin"])
+print("Temps :", res_graphe_15["temps"], "secondes")
 
 print("\nTest avec n = 20")
 res_graphe_20 = np_hard.tsp_nearest_neighbor(graphe_20, depart=0)
@@ -522,6 +555,14 @@ print("Qualité :", res_graphe_8["qualite"])
 print("Temps :", res_graphe_8["temps"], "secondes")
 print("Ratio :", res_graphe_8["ratio"])
 
+print("\nTest avec n = 10")
+res_graphe_10 = np_hard.tsp_programmation_dynamique_mesure(graphe_10, depart=0)
+print("Coût :", res_graphe_10["cout"])
+print("Chemin :", res_graphe_10["chemin"])
+print("Qualité :", res_graphe_10["qualite"])
+print("Temps :", res_graphe_10["temps"], "secondes")
+print("Ratio :", res_graphe_10["ratio"])
+
 print("\nTest avec n = 12")
 res_graphe_12 = np_hard.tsp_programmation_dynamique_mesure(graphe_12, depart=0)
 print("Coût :", res_graphe_12["cout"])
@@ -529,6 +570,14 @@ print("Chemin :", res_graphe_12["chemin"])
 print("Qualité :", res_graphe_12["qualite"])
 print("Temps :", res_graphe_12["temps"], "secondes")
 print("Ratio :", res_graphe_12["ratio"])
+
+print("\nTest avec n = 15")
+res_graphe_15 = np_hard.tsp_programmation_dynamique_mesure(graphe_15, depart=0)
+print("Coût :", res_graphe_15["cout"])
+print("Chemin :", res_graphe_15["chemin"])
+print("Qualité :", res_graphe_15["qualite"])
+print("Temps :", res_graphe_15["temps"], "secondes")
+print("Ratio :", res_graphe_15["ratio"])
 
 print("\nTest avec n = 20")
 print("Prend beaucoup de temps, vous pouvez décommenter le test si nécessaire")
@@ -538,3 +587,18 @@ print("Prend beaucoup de temps, vous pouvez décommenter le test si nécessaire"
 # print("Qualité :", res_graphe_20["qualite"])
 # print("Temps :", res_graphe_20["temps"], "secondes")
 # print("Ratio :", res_graphe_20["ratio"])
+
+print("\n--- Coloration de graphe ---")
+
+graphe_a_colore = {
+    'A': ['B', 'C'],
+    'B': ['A', 'C', 'D'],
+    'C': ['A', 'B', 'D'],
+    'D': ['B', 'C']
+}
+
+k, coloration = np_hard.coloration_minimale(graphe_a_colore)
+
+print("Nombre minimal de couleurs :", k)
+print("Coloration :", coloration)
+print("Coloration trouvée :", coloration)
