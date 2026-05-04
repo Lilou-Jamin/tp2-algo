@@ -9,460 +9,460 @@ import src.np_hard as np_hard
 import src.probabilistic as probabilistic
 import src.trees as trees
 
-# def humanize_number(number):
-#     # Retourne le nombre sous forme de string avec des espaces entre chaque groupe de 3 chiffres
-#     digits = []
+def humanize_number(number):
+    # Retourne le nombre sous forme de string avec des espaces entre chaque groupe de 3 chiffres
+    digits = []
 
-#     # On récupère tous les chiffres 1 par 1
-#     while number > 0:
-#         digits.append(number % 10)
-#         number //= 10
+    # On récupère tous les chiffres 1 par 1
+    while number > 0:
+        digits.append(number % 10)
+        number //= 10
 
-#     # On assemble les chiffres 1 par 1 et quand on arrive à 3 chiffres consécutifs, on insère un espace
-#     formatted_number = ''
-#     k = 0
-#     for digit in digits:
-#         if k > 2:
-#             formatted_number += ' '
-#             k = 0
+    # On assemble les chiffres 1 par 1 et quand on arrive à 3 chiffres consécutifs, on insère un espace
+    formatted_number = ''
+    k = 0
+    for digit in digits:
+        if k > 2:
+            formatted_number += ' '
+            k = 0
 
-#         formatted_number += str(digit)
-#         k += 1
+        formatted_number += str(digit)
+        k += 1
 
-#     # Comme on a récupéré les chiffres dans l'ordre inverse, on inverse la chaine de caractères finale.
-#     return formatted_number[::-1]
+    # Comme on a récupéré les chiffres dans l'ordre inverse, on inverse la chaine de caractères finale.
+    return formatted_number[::-1]
 
-# def generer_listes_pour_arbre(taille):
-#     """Génère trois listes de test : séquentielle, décroissante et aléatoire."""
-#     sequentiel = list(range(1, taille + 1))
-#     decroissant = list(range(taille, 0, -1))
+def generer_listes_pour_arbre(taille):
+    """Génère trois listes de test : séquentielle, décroissante et aléatoire."""
+    sequentiel = list(range(1, taille + 1))
+    decroissant = list(range(taille, 0, -1))
 
-#     # Aléatoire : on utilise les mêmes nombres, mais on les mélange
-#     # random.sample garantit qu'il n'y a pas de doublons
-#     import random
-#     aleatoire = random.sample(range(1, taille + 1), taille)
+    # Aléatoire : on utilise les mêmes nombres, mais on les mélange
+    # random.sample garantit qu'il n'y a pas de doublons
+    import random
+    aleatoire = random.sample(range(1, taille + 1), taille)
 
-#     return [[f'séquentielle ({1}..{taille})', sequentiel], [f'décroissante ({taille}..{1})', decroissant], ['aléatoire', aleatoire]]
+    return [[f'séquentielle ({1}..{taille})', sequentiel], [f'décroissante ({taille}..{1})', decroissant], ['aléatoire', aleatoire]]
 
-# def avl_rb_benchmark(taille):
-#     print("\n4.2 - AVL - Adelson-Velsky & Landis Tree")
-#     print("Arbre de 100 éléments :")
+def avl_rb_benchmark(taille):
+    print("\n4.2 - AVL - Adelson-Velsky & Landis Tree")
+    print("Arbre de 100 éléments :")
 
-#     listes = generer_listes_pour_arbre(taille)
-#     for liste in listes:
-#         print(f"\n\nListe {liste[0]} :")
-#         arbre = trees.AdelsonVelskyLandisTree()
-#         print("\nInsertion...")
-#         start = time.time()
-#         for i in liste[1]:
-#             arbre.insert(i)
-#         end = time.time()
-#         print(f'Insertion terminée en {timedelta(seconds=end - start)}')
-#         print(f"\nProfondeur maximale : {arbre.get_max_depth()}")
-#         print(f"Rotations simples effectuées : {arbre.simple_rotations}")
-#         print(f"Rotations doubles effectuées : {arbre.double_rotations}")
+    listes = generer_listes_pour_arbre(taille)
+    for liste in listes:
+        print(f"\n\nListe {liste[0]} :")
+        arbre = trees.AdelsonVelskyLandisTree()
+        print("\nInsertion...")
+        start = time.time()
+        for i in liste[1]:
+            arbre.insert(i)
+        end = time.time()
+        print(f'Insertion terminée en {timedelta(seconds=end - start)}')
+        print(f"\nProfondeur maximale : {arbre.get_max_depth()}")
+        print(f"Rotations simples effectuées : {arbre.simple_rotations}")
+        print(f"Rotations doubles effectuées : {arbre.double_rotations}")
 
-#     print("\n4.3 - Red-Black")
-#     print("Arbre de 100 éléments :")
+    print("\n4.3 - Red-Black")
+    print("Arbre de 100 éléments :")
 
-#     arbre = trees.RedBlackTree()
-#     for liste in listes:
-#         print(f"\n\nListe {liste[0]} :")
-#         arbre = trees.RedBlackTree()
-#         print("\nInsertion...")
-#         start = time.time()
-#         for i in liste[1]:
-#             arbre.insert(i)
-#         end = time.time()
-#         print(f'Insertion terminée en {timedelta(seconds=end - start)}')
+    arbre = trees.RedBlackTree()
+    for liste in listes:
+        print(f"\n\nListe {liste[0]} :")
+        arbre = trees.RedBlackTree()
+        print("\nInsertion...")
+        start = time.time()
+        for i in liste[1]:
+            arbre.insert(i)
+        end = time.time()
+        print(f'Insertion terminée en {timedelta(seconds=end - start)}')
 
-#     print('Dernier arbre traité :')
-#     arbre.print()
+    print('Dernier arbre traité :')
+    arbre.print()
 
 
-# graph_data = {
-#     'A': ['B', 'C'],
-#     'B': ['A'],
-#     'C': ['A', 'B']
-# }
+graph_data = {
+    'A': ['B', 'C'],
+    'B': ['A'],
+    'C': ['A', 'B']
+}
 
-# weighted_graph_data = {
-#     'A': [('B', 4), ('C', 2)],
-#     'B': [('A', 4), ('C', 1), ('D', 5)],
-#     'C': [('A', 2), ('B', 1), ('D', 8)],
-#     'D': [('B', 5), ('C', 8)]
-# }
+weighted_graph_data = {
+    'A': [('B', 4), ('C', 2)],
+    'B': [('A', 4), ('C', 1), ('D', 5)],
+    'C': [('A', 2), ('B', 1), ('D', 8)],
+    'D': [('B', 5), ('C', 8)]
+}
 
-# graphe = {
-#     "A": ["B", "C"],
-#     "B": ["D", "E"],
-#     "C": ["F"],
-#     "D": [],
-#     "E": [],
-#     "F": []
-# }
+graphe = {
+    "A": ["B", "C"],
+    "B": ["D", "E"],
+    "C": ["F"],
+    "D": [],
+    "E": [],
+    "F": []
+}
 
-# graphe_cycle = {
-#     "A": ["B"],
-#     "B": ["C"],
-#     "C": ["A"]
-# }
+graphe_cycle = {
+    "A": ["B"],
+    "B": ["C"],
+    "C": ["A"]
+}
 
-# graphe_tri_tipologique = {
-#     "A": ["C"],
-#     "B": ["C", "D"],
-#     "C": ["E"],
-#     "D": ["F"],
-#     "E": ["F"],
-#     "F": []
-# }
+graphe_tri_tipologique = {
+    "A": ["C"],
+    "B": ["C", "D"],
+    "C": ["E"],
+    "D": ["F"],
+    "E": ["F"],
+    "F": []
+}
 
-# graphe_plus_court_chemin = {
-#     "A": ["B", "C"],
-#     "B": ["D"],
-#     "C": ["D", "E"],
-#     "D": ["F"],
-#     "E": ["F"],
-#     "F": []
-# }
+graphe_plus_court_chemin = {
+    "A": ["B", "C"],
+    "B": ["D"],
+    "C": ["D", "E"],
+    "D": ["F"],
+    "E": ["F"],
+    "F": []
+}
 
-# print("---- Exercice 1 ----")
-# print("Graphe à matrice d'adjacence")
-# graphs.MatrixGraph(['A', 'B', 'C'], [[1, 2, 3], [4, 5, 6], [7, 8, 9]]).print()
-# print("Graphe à liste d'adjacence")
-# graphs.ListGraph(graph_data).print()
-# print("Graphe à liste d'adjacence pondéré")
-# weighted_list_graph = graphs.WeightedListGraph(weighted_graph_data)
-# weighted_list_graph.print()
-# print('\n graphe sous forme de matrice :')
-# graphs.MatrixGraph(['A', 'B', 'C'], [[1, 2, 3], [4, 5, 6], [7, 8, 9]]).print()
-# print('\ngraphe sous forme de liste d\'adjacence :')
-# graphs.ListGraph(graph_data).print()
-# print("Test parcours dfs récursif :", graphs.dfs_recursif(graphe, "A"))
-# print("Test parcours dfs itératif :", graphs.dfs_iteratif(graphe, "A"))
-# print("Test si un graphe est cyclique :", graphs.contient_cycle_oriente(graphe_cycle))
-# print("Test si un graphe non orienté est cyclique :", graphs.contient_cycle_non_oriente(graphe_cycle))
-# print("Test tri tipologique :", graphs.tri_topologique_dfs(graphe_tri_tipologique))
-# print("Test du plus court chemin dans un graphe non pondéré :", graphs.plus_court_chemin_bfs(graphe_plus_court_chemin, "A", "F"))
+print("---- Exercice 1 ----")
+print("Graphe à matrice d'adjacence")
+graphs.MatrixGraph(['A', 'B', 'C'], [[1, 2, 3], [4, 5, 6], [7, 8, 9]]).print()
+print("Graphe à liste d'adjacence")
+graphs.ListGraph(graph_data).print()
+print("Graphe à liste d'adjacence pondéré")
+weighted_list_graph = graphs.WeightedListGraph(weighted_graph_data)
+weighted_list_graph.print()
+print('\n graphe sous forme de matrice :')
+graphs.MatrixGraph(['A', 'B', 'C'], [[1, 2, 3], [4, 5, 6], [7, 8, 9]]).print()
+print('\ngraphe sous forme de liste d\'adjacence :')
+graphs.ListGraph(graph_data).print()
+print("Test parcours dfs récursif :", graphs.dfs_recursif(graphe, "A"))
+print("Test parcours dfs itératif :", graphs.dfs_iteratif(graphe, "A"))
+print("Test si un graphe est cyclique :", graphs.contient_cycle_oriente(graphe_cycle))
+print("Test si un graphe non orienté est cyclique :", graphs.contient_cycle_non_oriente(graphe_cycle))
+print("Test tri tipologique :", graphs.tri_topologique_dfs(graphe_tri_tipologique))
+print("Test du plus court chemin dans un graphe non pondéré :", graphs.plus_court_chemin_bfs(graphe_plus_court_chemin, "A", "F"))
 
-# input("\nAppuyez sur Entrée pour continuer vers l'exo 2")
+input("\nAppuyez sur Entrée pour continuer vers l'exo 2")
 
-# print("\n---- Exercice 2 ----")
+print("\n---- Exercice 2 ----")
 
-# print("\n2.1 : ")
+print("\n2.1 : ")
 
-# print('\nTest Djikstra Heap avec graphe simple')
-# start = time.time()
-# print(graphs.dijkstra_heap(weighted_list_graph, 'A'))
-# end = time.time()
-# print(f'Test terminé en {timedelta(seconds=end - start)}')
+print('\nTest Djikstra Heap avec graphe simple')
+start = time.time()
+print(graphs.dijkstra_heap(weighted_list_graph, 'A'))
+end = time.time()
+print(f'Test terminé en {timedelta(seconds=end - start)}')
 
-# print('\nTest Djikstra Naïf avec graphe simple')
-# start = time.time()
-# print(graphs.dijkstra_naif(weighted_list_graph, 'A'))
-# end = time.time()
-# print(f'Test terminé en {timedelta(seconds=end - start)}')
+print('\nTest Djikstra Naïf avec graphe simple')
+start = time.time()
+print(graphs.dijkstra_naif(weighted_list_graph, 'A'))
+end = time.time()
+print(f'Test terminé en {timedelta(seconds=end - start)}')
 
-# creux_sommets = 15000
-# creux_max_voisins = 3
-# print(f"Génération graphe creux... (V = {creux_sommets}, max {creux_max_voisins} voisins)")
-# start = time.time()
-# graphe_creux = graphs.generer_graphe_creux(creux_sommets, creux_max_voisins)
-# end = time.time()
-# print(f'Génération terminée en {timedelta(seconds=end - start)}')
+creux_sommets = 15000
+creux_max_voisins = 3
+print(f"Génération graphe creux... (V = {creux_sommets}, max {creux_max_voisins} voisins)")
+start = time.time()
+graphe_creux = graphs.generer_graphe_creux(creux_sommets, creux_max_voisins)
+end = time.time()
+print(f'Génération terminée en {timedelta(seconds=end - start)}')
 
-# # Note: la génération de graphe dense a plus de 3000 sommets peut prendre un temps
-# # significatif selon la machine, lancer ce test que lorsque nécessaire
-# #dense_sommets = 15000
-# dense_sommets = 2000
-# dense_prob_connecte = 0.90
-# print(f"Génération graphe dense... (V = {dense_sommets}, {int(dense_prob_connecte * 100)}% connectés)")
-# start = time.time()
-# graphe_dense = graphs.generer_graphe_dense(dense_sommets, dense_prob_connecte)
-# end = time.time()
-# print(f'Génération terminée en {timedelta(seconds=end - start)}')
+# Note: la génération de graphe dense a plus de 3000 sommets peut prendre un temps
+# significatif selon la machine, lancer ce test que lorsque nécessaire
+#dense_sommets = 15000
+dense_sommets = 2000
+dense_prob_connecte = 0.90
+print(f"Génération graphe dense... (V = {dense_sommets}, {int(dense_prob_connecte * 100)}% connectés)")
+start = time.time()
+graphe_dense = graphs.generer_graphe_dense(dense_sommets, dense_prob_connecte)
+end = time.time()
+print(f'Génération terminée en {timedelta(seconds=end - start)}')
 
-# print('Test Djikstra Heap avec un graphe creux')
-# start = time.time()
-# result = graphs.dijkstra_heap(graphe_creux, 0)
-# end = time.time()
-# print(f'Djikstra Heap graphe creux terminé en {timedelta(seconds=end - start)}')
-# print(f'Résultat: {result}')
+print('Test Djikstra Heap avec un graphe creux')
+start = time.time()
+result = graphs.dijkstra_heap(graphe_creux, 0)
+end = time.time()
+print(f'Djikstra Heap graphe creux terminé en {timedelta(seconds=end - start)}')
+print(f'Résultat: {result}')
 
-# print('Test Djikstra Naïf avec un graphe creux')
-# start = time.time()
-# result = graphs.dijkstra_naif(graphe_creux, 0)
-# end = time.time()
-# print(f'Djikstra Naïf graphe creux terminé en {timedelta(seconds=end - start)}')
-# print(f'Résultat: {result}')
+print('Test Djikstra Naïf avec un graphe creux')
+start = time.time()
+result = graphs.dijkstra_naif(graphe_creux, 0)
+end = time.time()
+print(f'Djikstra Naïf graphe creux terminé en {timedelta(seconds=end - start)}')
+print(f'Résultat: {result}')
 
-# print('\nTest Djikstra Heap avec un graphe dense')
-# start = time.time()
-# result = graphs.dijkstra_heap(graphe_dense, 0)
-# end = time.time()
-# print(f'Djikstra Heap graphe dense terminé en {timedelta(seconds=end - start)}')
-# print(f'Résultat: {result}')
+print('\nTest Djikstra Heap avec un graphe dense')
+start = time.time()
+result = graphs.dijkstra_heap(graphe_dense, 0)
+end = time.time()
+print(f'Djikstra Heap graphe dense terminé en {timedelta(seconds=end - start)}')
+print(f'Résultat: {result}')
 
-# print('Test Djikstra Naïf avec un graphe dense')
-# start = time.time()
-# result = graphs.dijkstra_naif(graphe_dense, 0)
-# end = time.time()
-# print(f'Djikstra Naïf graphe dense terminé en {timedelta(seconds=end - start)}')
-# print(f'Résultat: {result}')
+print('Test Djikstra Naïf avec un graphe dense')
+start = time.time()
+result = graphs.dijkstra_naif(graphe_dense, 0)
+end = time.time()
+print(f'Djikstra Naïf graphe dense terminé en {timedelta(seconds=end - start)}')
+print(f'Résultat: {result}')
 
-# print("\n2.2 : ")
+print("\n2.2 : ")
 
-# graph_liste = graphs.ListGraph({
-#     'A': [('B', 4), ('C', 2)],
-#     'B': [('C', 3), ('D', 2), ('E', 3)],
-#     'C': [('B', 1), ('D', 4), ('E', 5)],
-#     'D': [('E', -5)],
-#     'E': []
-# })
-# distances, predecessors = graphs.bellman_ford(graph_liste, 'A')
+graph_liste = graphs.ListGraph({
+    'A': [('B', 4), ('C', 2)],
+    'B': [('C', 3), ('D', 2), ('E', 3)],
+    'C': [('B', 1), ('D', 4), ('E', 5)],
+    'D': [('E', -5)],
+    'E': []
+})
+distances, predecessors = graphs.bellman_ford(graph_liste, 'A')
 
-# graph_matrice = graphs.MatrixGraph(
-#     vertices = ['A', 'B', 'C', 'D', 'E'],
-#     matrix = [
-#         [0,    4,    2,    None, None],
-#         [None, 0,    3,    2,    3],
-#         [None, 1,    0,    4,    5],
-#         [None, None, None, 0,   -5],
-#         [None, None, None, None, 0]
-#     ]
-# )
-# distances2, predecessors2 = graphs.bellman_ford(graph_matrice, 'A')
+graph_matrice = graphs.MatrixGraph(
+    vertices = ['A', 'B', 'C', 'D', 'E'],
+    matrix = [
+        [0,    4,    2,    None, None],
+        [None, 0,    3,    2,    3],
+        [None, 1,    0,    4,    5],
+        [None, None, None, 0,   -5],
+        [None, None, None, None, 0]
+    ]
+)
+distances2, predecessors2 = graphs.bellman_ford(graph_matrice, 'A')
 
-# print("\nTest de l'algo de Bellman-Ford :")
-# print("\nPour un graphe en liste d'adjacence :")
-# print("Distances :", distances)
-# print("Prédécesseurs :", predecessors)
-# print("Chemin A -> E :", graphs.reconstruct_path(predecessors, 'A', 'E'))
+print("\nTest de l'algo de Bellman-Ford :")
+print("\nPour un graphe en liste d'adjacence :")
+print("Distances :", distances)
+print("Prédécesseurs :", predecessors)
+print("Chemin A -> E :", graphs.reconstruct_path(predecessors, 'A', 'E'))
 
-# print("\nPour un graphe en matrice :")
-# print("Distances :", distances2)
-# print("Prédécesseurs :", predecessors2)
-# print("Chemin A -> E :", graphs.reconstruct_path(predecessors2, 'A', 'E'))
+print("\nPour un graphe en matrice :")
+print("Distances :", distances2)
+print("Prédécesseurs :", predecessors2)
+print("Chemin A -> E :", graphs.reconstruct_path(predecessors2, 'A', 'E'))
 
-# print("\n2.3 - Algorithme de Floyd-Warshall :")
-# print("- Graphes sans cycles négatifs :")
-# print("V = 10")
-# graphe = graphs.generer_graphe_matrice(10)
+print("\n2.3 - Algorithme de Floyd-Warshall :")
+print("- Graphes sans cycles négatifs :")
+print("V = 10")
+graphe = graphs.generer_graphe_matrice(10)
 # graphe.print_spaced()
-# print("Plus court chemins : ")
-# graphs.floyd_warshall(graphe).print()
+print("Plus court chemins : ")
+graphs.floyd_warshall(graphe).print()
 
-# print("\nV = 50")
-# graphe = graphs.generer_graphe_matrice(50)
+print("\nV = 50")
+graphe = graphs.generer_graphe_matrice(50)
 # graphe.print_spaced()
-# print("Plus court chemins : ")
-# graphs.floyd_warshall(graphe).print()
+print("Plus court chemins : ")
+graphs.floyd_warshall(graphe).print()
 
-# print("\nV = 100")
-# graphe = graphs.generer_graphe_matrice(100)
+print("\nV = 100")
+graphe = graphs.generer_graphe_matrice(100)
 # graphe.print_spaced()
-# print("Plus court chemins : ")
-# graphs.floyd_warshall(graphe).print()
+print("Plus court chemins : ")
+graphs.floyd_warshall(graphe).print()
 
-# print("\n\n- Graphes avec cycles négatifs :")
-# print("V = 10")
-# graphe = graphs.generer_graphe_matrice(10, True)
+print("\n\n- Graphes avec cycles négatifs :")
+print("V = 10")
+graphe = graphs.generer_graphe_matrice(10, True)
 # graphe.print_spaced()
-# print("Plus court chemins : ")
-# graphs.floyd_warshall(graphe)
+print("Plus court chemins : ")
+graphs.floyd_warshall(graphe)
 
-# print("\nV = 50")
-# graphe = graphs.generer_graphe_matrice(50, True)
+print("\nV = 50")
+graphe = graphs.generer_graphe_matrice(50, True)
 # graphe.print_spaced()
-# print("Plus court chemins : ")
-# graphs.floyd_warshall(graphe)
+print("Plus court chemins : ")
+graphs.floyd_warshall(graphe)
 
-# print("\nV = 100")
-# graphe = graphs.generer_graphe_matrice(100, True)
+print("\nV = 100")
+graphe = graphs.generer_graphe_matrice(100, True)
 # graphe.print_spaced()
-# print("Plus court chemins : ")
-# graphs.floyd_warshall(graphe)
+print("Plus court chemins : ")
+graphs.floyd_warshall(graphe)
 
-# input("\nAppuyez sur Entrée pour continuer vers l'exo 3")
+input("\nAppuyez sur Entrée pour continuer vers l'exo 3")
 
-# print("\n---- Exercice 3 ----")
+print("\n---- Exercice 3 ----")
 
-# capacites = {
-#     's': {'a': 10, 'b': 5},
-#     'a': {'b': 15, 't': 10},
-#     'b': {'t': 10},
-#     't': {}
-# }
+capacites = {
+    's': {'a': 10, 'b': 5},
+    'a': {'b': 15, 't': 10},
+    'b': {'t': 10},
+    't': {}
+}
 
-# print("\nTest de l'algo de Ford-Fulkerson :")
-# max_flow, flot = graphs.ford_fulkerson(capacites, 's', 't')
-# print("Flot maximal =", max_flow)
-# print("Répartition du flot :")
-# for u in flot:
-#     for v in flot[u]:
-#         print(f"{u} -> {v} : {flot[u][v]}")
+print("\nTest de l'algo de Ford-Fulkerson :")
+max_flow, flot = graphs.ford_fulkerson(capacites, 's', 't')
+print("Flot maximal =", max_flow)
+print("Répartition du flot :")
+for u in flot:
+    for v in flot[u]:
+        print(f"{u} -> {v} : {flot[u][v]}")
 
-# print("\nTest de l'algo de Edmonds-Karp :")
-# max_flow, flot = graphs.edmonds_karp(capacites, 's', 't')
-# print("Flot maximal :", max_flow)
-# print("Flots sur les arêtes :")
-# for u in flot:
-#     for v in flot[u]:
-#         print(f"{u} -> {v} : {flot[u][v]}")
+print("\nTest de l'algo de Edmonds-Karp :")
+max_flow, flot = graphs.edmonds_karp(capacites, 's', 't')
+print("Flot maximal :", max_flow)
+print("Flots sur les arêtes :")
+for u in flot:
+    for v in flot[u]:
+        print(f"{u} -> {v} : {flot[u][v]}")
 
-# input("\nAppuyez sur Entrée pour continuer vers l'exo 4")
+input("\nAppuyez sur Entrée pour continuer vers l'exo 4")
 
-# print("\n---- Exercice 4 ----")
+print("\n---- Exercice 4 ----")
 
-# print("4.1 - BST - Binary Search Tree")
-# arbre = trees.BinarySearchTree()
+print("4.1 - BST - Binary Search Tree")
+arbre = trees.BinarySearchTree()
 
-# print("\nInsertion")
-# valeurs = [50, 30, 20, 40, 70, 60, 80]
-# print(f"Valeurs à ajouter: {valeurs}")
-# for v in valeurs:
-#     arbre.insert(v)
+print("\nInsertion")
+valeurs = [50, 30, 20, 40, 70, 60, 80]
+print(f"Valeurs à ajouter: {valeurs}")
+for v in valeurs:
+    arbre.insert(v)
 
-# print(f'Arbre après ajout :\n')
-# arbre.print()
+print(f'Arbre après ajout :\n')
+arbre.print()
 
 print("\nParcours infixe (trié) :", arbre.traversal('inordre'))
 print("Parcours préfixe (racine d'abord) :", arbre.traversal('preordre'))
 print("Parcours postfixe (enfants d'abord) :", arbre.traversal('postordre'))
 
-# print("\nRecherche")
-# print("\nRecherche 40 : ", "Trouvé" if arbre.search(40) else "Non trouvé")
-# print("Recherche 90 : ", "Trouvé" if arbre.search(90) else "Non trouvé")
+print("\nRecherche")
+print("\nRecherche 40 : ", "Trouvé" if arbre.search(40) else "Non trouvé")
+print("Recherche 90 : ", "Trouvé" if arbre.search(90) else "Non trouvé")
 
-# print("\nSuppression")
-# print("\nSuppression de 20 (feuille)...")
-# arbre.remove(20)
-# arbre.print()
+print("\nSuppression")
+print("\nSuppression de 20 (feuille)...")
+arbre.remove(20)
+arbre.print()
 
-# print("\nSuppression de 50 (racine avec deux enfants)...")
-# arbre.remove(50)
-# arbre.print()
+print("\nSuppression de 50 (racine avec deux enfants)...")
+arbre.remove(50)
+arbre.print()
 
-# print("\nBST avec valeurs séquentielles :")
-# arbre = trees.BinarySearchTree()
+print("\nBST avec valeurs séquentielles :")
+arbre = trees.BinarySearchTree()
 
-# valeurs = [10, 20, 30, 40, 50, 60, 70, 80]
-# print(f"Valeurs à ajouter: {valeurs}")
-# for v in valeurs:
-#     arbre.insert(v)
+valeurs = [10, 20, 30, 40, 50, 60, 70, 80]
+print(f"Valeurs à ajouter: {valeurs}")
+for v in valeurs:
+    arbre.insert(v)
 
-# arbre.print()
+arbre.print()
 
-# avl_rb_benchmark(100)
+avl_rb_benchmark(100)
 
-# input("\nAppuyez sur Entrée pour continuer vers l'exo 5")
+input("\nAppuyez sur Entrée pour continuer vers l'exo 5")
 
-# print("\n---- Exercice 5 ----")
-# print("5.1 - Randomized QuickSort")
+print("\n---- Exercice 5 ----")
+print("5.1 - Randomized QuickSort")
 
-# print("Tri de liste de 100 000 éléments séquentiels")
-# random_list = [x for x in range(100_000)]
-# deterministic_quicksorted_list = random_list.copy()
-# randomized_quicksorted_list = random_list.copy()
+print("Tri de liste de 100 000 éléments séquentiels")
+random_list = [x for x in range(100_000)]
+deterministic_quicksorted_list = random_list.copy()
+randomized_quicksorted_list = random_list.copy()
 
-# start = time.time()
-# try:
-#     probabilistic.deterministic_quicksort(deterministic_quicksorted_list)
-#     end = time.time()
-#     print(f'QuickSort Déterministe : {timedelta(seconds=end - start)}')
-# except RecursionError:
-#     print('QuickSort Déterministe : RecursionError')
+start = time.time()
+try:
+    probabilistic.deterministic_quicksort(deterministic_quicksorted_list)
+    end = time.time()
+    print(f'QuickSort Déterministe : {timedelta(seconds=end - start)}')
+except RecursionError:
+    print('QuickSort Déterministe : RecursionError')
 
-# start = time.time()
-# probabilistic.randomized_quicksort(randomized_quicksorted_list)
-# end = time.time()
-# print(f'QuickSort Randomized : {timedelta(seconds=end - start)}')
+start = time.time()
+probabilistic.randomized_quicksort(randomized_quicksorted_list)
+end = time.time()
+print(f'QuickSort Randomized : {timedelta(seconds=end - start)}')
 
-# start = time.time()
-# random_list.sort()
-# end = time.time()
-# print(f'Tri natif Python : {timedelta(seconds=end - start)}')
+start = time.time()
+random_list.sort()
+end = time.time()
+print(f'Tri natif Python : {timedelta(seconds=end - start)}')
 
-# print("\n\nTri de liste de 100 000 éléments aléatoires")
-# shuffle(random_list)
+print("\n\nTri de liste de 100 000 éléments aléatoires")
+shuffle(random_list)
 
-# deterministic_quicksorted_list = random_list.copy()
-# randomized_quicksorted_list = random_list.copy()
+deterministic_quicksorted_list = random_list.copy()
+randomized_quicksorted_list = random_list.copy()
 
-# start = time.time()
-# probabilistic.deterministic_quicksort(deterministic_quicksorted_list)
-# end = time.time()
-# print(f'QuickSort Déterministe : {timedelta(seconds=end - start)}')
+start = time.time()
+probabilistic.deterministic_quicksort(deterministic_quicksorted_list)
+end = time.time()
+print(f'QuickSort Déterministe : {timedelta(seconds=end - start)}')
 
-# start = time.time()
-# probabilistic.randomized_quicksort(randomized_quicksorted_list)
-# end = time.time()
-# print(f'QuickSort Randomized : {timedelta(seconds=end - start)}')
+start = time.time()
+probabilistic.randomized_quicksort(randomized_quicksorted_list)
+end = time.time()
+print(f'QuickSort Randomized : {timedelta(seconds=end - start)}')
 
-# start = time.time()
-# random_list.sort()
-# end = time.time()
-# print(f'Tri natif Python : {timedelta(seconds=end - start)}')
-# print(f'\nQuickSort Déterministe = Tri natif Python : {random_list == deterministic_quicksorted_list}')
-# print(f'QuickSort Randomized = Tri natif Python : {random_list == randomized_quicksorted_list}')
+start = time.time()
+random_list.sort()
+end = time.time()
+print(f'Tri natif Python : {timedelta(seconds=end - start)}')
+print(f'\nQuickSort Déterministe = Tri natif Python : {random_list == deterministic_quicksorted_list}')
+print(f'QuickSort Randomized = Tri natif Python : {random_list == randomized_quicksorted_list}')
 
-# print("\n\n5.2 - Sélection (k-ème) (QuickSelect)")
-# random_list = [randint(0, 2_000_000_000) for _ in range(100_000)]
-# random_list.sort()
-# print("QuickSelect sur une liste de 100 000 éléments séquentiels")
-# list_for_deterministic_quickselect = random_list.copy()
-# list_for_randomized_quickselect = random_list.copy()
+print("\n\n5.2 - Sélection (k-ème) (QuickSelect)")
+random_list = [randint(0, 2_000_000_000) for _ in range(100_000)]
+random_list.sort()
+print("QuickSelect sur une liste de 100 000 éléments séquentiels")
+list_for_deterministic_quickselect = random_list.copy()
+list_for_randomized_quickselect = random_list.copy()
 
-# for k in [0, len(random_list) // 2, len(random_list) - 1]:
-#     print()
-#     start = time.time()
-#     try:
-#         result = probabilistic.deterministic_quickselect(list_for_deterministic_quickselect, k)
-#         end = time.time()
-#         print(f'QuickSelect Déterministe (k: {k}) : {timedelta(seconds=end - start)}. Résultat : {result}')
-#     except RecursionError:
-#         print(f'QuickSelect Déterministe (k: {k}) : RecursionError')
+for k in [0, len(random_list) // 2, len(random_list) - 1]:
+    print()
+    start = time.time()
+    try:
+        result = probabilistic.deterministic_quickselect(list_for_deterministic_quickselect, k)
+        end = time.time()
+        print(f'QuickSelect Déterministe (k: {k}) : {timedelta(seconds=end - start)}. Résultat : {result}')
+    except RecursionError:
+        print(f'QuickSelect Déterministe (k: {k}) : RecursionError')
 
-#     start = time.time()
-#     result = probabilistic.randomized_quickselect(list_for_randomized_quickselect, k)
-#     end = time.time()
-#     print(f'QuickSelect Randomized (k: {k}) : {timedelta(seconds=end - start)}. Résultat : {result}')
+    start = time.time()
+    result = probabilistic.randomized_quickselect(list_for_randomized_quickselect, k)
+    end = time.time()
+    print(f'QuickSelect Randomized (k: {k}) : {timedelta(seconds=end - start)}. Résultat : {result}')
 
-# print("\n\nQuickSelect sur une liste de 100 000 éléments aléatoires")
-# shuffle(random_list)
-# list_for_deterministic_quickselect = random_list.copy()
-# list_for_randomized_quickselect = random_list.copy()
+print("\n\nQuickSelect sur une liste de 100 000 éléments aléatoires")
+shuffle(random_list)
+list_for_deterministic_quickselect = random_list.copy()
+list_for_randomized_quickselect = random_list.copy()
 
-# for k in [0, len(random_list) // 2, len(random_list) - 1]:
-#     print()
-#     start = time.time()
-#     try:
-#         result = probabilistic.deterministic_quickselect(list_for_deterministic_quickselect, k)
-#         end = time.time()
-#         print(f'QuickSelect Déterministe (k: {k}) : {timedelta(seconds=end - start)}. Résultat : {result}')
-#     except RecursionError:
-#         print(f'QuickSelect Déterministe (k: {k}) : RecursionError')
+for k in [0, len(random_list) // 2, len(random_list) - 1]:
+    print()
+    start = time.time()
+    try:
+        result = probabilistic.deterministic_quickselect(list_for_deterministic_quickselect, k)
+        end = time.time()
+        print(f'QuickSelect Déterministe (k: {k}) : {timedelta(seconds=end - start)}. Résultat : {result}')
+    except RecursionError:
+        print(f'QuickSelect Déterministe (k: {k}) : RecursionError')
 
-#     start = time.time()
-#     result = probabilistic.randomized_quickselect(list_for_randomized_quickselect, k)
-#     end = time.time()
-#     print(f'QuickSelect Randomized (k: {k}) : {timedelta(seconds=end - start)}. Résultat : {result}')
+    start = time.time()
+    result = probabilistic.randomized_quickselect(list_for_randomized_quickselect, k)
+    end = time.time()
+    print(f'QuickSelect Randomized (k: {k}) : {timedelta(seconds=end - start)}. Résultat : {result}')
 
-# print("\n\n5.3 - Estimation de Pi (Monte Carlo)")
-# samples = [10, 100, 1_000, 10_000, 100_000, 1_000_000, 10_000_000]
+print("\n\n5.3 - Estimation de Pi (Monte Carlo)")
+samples = [10, 100, 1_000, 10_000, 100_000, 1_000_000, 10_000_000]
 
-# print(f"{'N':<12} | {'Estimation de Pi':<20} | {'Erreur Absolue':<18} | {"Durée de l'estimation":<20}")
-# print("-" * 80)
-# for n in samples:
-#     start = time.time()
-#     estimation = probabilistic.estimate_pi(n)
-#     end = time.time()
+print(f"{'N':<12} | {'Estimation de Pi':<20} | {'Erreur Absolue':<18} | {"Durée de l'estimation":<20}")
+print("-" * 80)
+for n in samples:
+    start = time.time()
+    estimation = probabilistic.estimate_pi(n)
+    end = time.time()
 
-#     # L'erreur absolue est la différence positive entre la vraie valeur et l'estimation
-#     erreur = abs(pi - estimation)
-#     print(f"{humanize_number(n):<12} | {estimation:<20.6f} | {erreur:<18.6f} | {str(timedelta(seconds=end - start)):<20}")
+    # L'erreur absolue est la différence positive entre la vraie valeur et l'estimation
+    erreur = abs(pi - estimation)
+    print(f"{humanize_number(n):<12} | {estimation:<20.6f} | {erreur:<18.6f} | {str(timedelta(seconds=end - start)):<20}")
 
-# input("\nAppuyez sur Entrée pour continuer vers l'exo 6")
+input("\nAppuyez sur Entrée pour continuer vers l'exo 6")
 
 print("\n---- Exercice 6 ----")
 print("\n--- TSP par force brute ---")
