@@ -1,17 +1,7 @@
-import src.graphs as graphs
-import src.np_hard as np_hard
-import probabilistic as probabilistic
-import trees as trees
+from tests.test_all import main_tests
 
-# On a choisit de représenter les graphes sous forme de dictionnaire
-# où les clés sont les sommets et les valeurs sont des listes de sommets adjacents
-graphe = {
-    "A": ["B", "C"],
-    "B": ["D", "E"],
-    "C": ["F"],
-    "D": [],
-    "E": [],
-    "F": []
-}
+def main():
+    main_tests()
 
-print(dfs_recursif(graphe, "A"))
+if __name__ == "__main__":
+    main()
