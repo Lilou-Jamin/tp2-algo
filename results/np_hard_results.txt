@@ -1,0 +1,14 @@
+6.3 - P vs NP
+
+Problèmes faisant partie de P (ceux résolvables en temps polynomial): 
+- Tri de tableau
+- Recherche dichotomique
+Ils sont dans la classe P parce que ce sont des problèmes "linéaires" résolvables facilement en un temps réduit à l'aide d'algorithmes simples
+
+Problèmes faisant partie de NP (ceux vérifiables en temps polynomial, et qui comprend NP-complet et NP-difficile): 
+- SAT (Satisfiabilité)
+- TSP-decision/optimisation
+- Knapsack decision
+- Cycle hamiltonien
+- Coloration K-coloration
+Ils sont dans la classe NP car ce sont des problèmes plus complexes où il est moins évident de trouver une solution mais où il est facile de vérifier si une solution proposée est correcte.

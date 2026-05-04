@@ -1,4 +1,4 @@
-# Comparaison DFS / BFS
+1.3 - Comparaison DFS / BFS
 
 Niveau complexité temporelle : DFS et BFS ont la même complexité temporelle quand ils sont représentés par des listes d’adjacence : O(V + E).
 En espace, les deux sont en O(V).
@@ -7,14 +7,14 @@ La différence principale est leur stratégie :
 - BFS explore par niveaux, ce qui le rend plus adapté au calcul du plus court chemin dans un graphe pondéré
 
 
-# Comparaison Bellman-Ford / Dijkstra
+2.2 - Comparaison Bellman-Ford / Dijkstra
 Bellman-Ford calcule les plus courts chemins depuis un sommet source dans un graphe pondéré. 
 Sa complexité est O(V × E) car il relâche toutes les arêtes |V| - 1 fois
 Son principal avantage est qu’il accepte les arêtes de poids négatif, contrairement à Dijkstra. Il permet aussi de détecter la présence de cycles négatifs.
 On l’utilise donc pour les graphes pondérés contenant potentiellement des poids négatifs ou lorsqu’on veut vérifier qu’aucun cycle négatif n’existe.
 
 
-# Comparaison des graphes dense et creux pour Dijkstra naif / heap
+Comparaison des graphes dense et creux pour Dijkstra naif / heap
 Pour la génération des graphes :
 - La génération de graphe creux est très rapide comme il n'y a que très peu de connexions entre les différents sommets
 - La génération de graphe dense consomme beaucoup plus de resources comme on créé des connexions entre presque tous les sommets
@@ -28,7 +28,7 @@ Une des raisons pour cela semble être le fait que la version heap de l'algorith
 L'implémentation du Dijkstra naif proposée ici n'utilise que des structures de données Python qui sont donc bien moins optimisées que les structures de données de heapq.
 
 
-# Comparaison Ford-Fulkerson / Edmonds-Karp
+3.3 - Comparaison Ford-Fulkerson / Edmonds-Karp
 
 Niveau itérations : 
 on considère qu'une itération = la recherche d’un chemin augmentant + la mise à jour du flot
@@ -46,7 +46,7 @@ Niveau flot max :
 Les deux algorithmes trouvent le même flot final, c'est la méthode pour y arriver qui diffère.
 
 
-# Comparaison graphes petit flot / grand flot 
+Comparaison graphes petit flot / grand flot 
 Graphe à petit flot : peu de chemins augmentants + capacités faibles + flot maximal petit
 Adapté pour Ford-Fulkerson 
 
